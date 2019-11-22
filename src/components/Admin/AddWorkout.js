@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {addWorkout} from "./WorkoutFunction";
+import {addWorkout} from "../WorkoutFunction";
 import axios from "axios";
 
 

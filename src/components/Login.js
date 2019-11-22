@@ -9,9 +9,7 @@ class Login extends Component {
             email:'',
             password: '',
             errors: {},
-            validate: {
-                emailState: ''
-            },
+
         },
         this.validateForm = this.validateForm.bind(this)
         this.handleChange= this.handleChange.bind(this)
@@ -26,19 +24,7 @@ class Login extends Component {
         }
     }
 
-    validateEmail(e) {
 
-        let emailRex;
-        emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-        const { validate } = this.state;
-        if (emailRex.test(e.target.value)) {
-            validate.emailState = 'has-success'
-        } else {
-            validate.emailState = 'has-danger'
-        }
-        this.setState({ validate })
-    }
 
     handleChange = async (event) => {
         const { target } = event;
@@ -48,10 +34,6 @@ class Login extends Component {
         });
     };
 
-
-    // onChange(e){
-    //     this.setState({[e.target.name]: e.target.value})
-    // }
 
     onSubmit(e){
         e.preventDefault()
@@ -89,7 +71,6 @@ class Login extends Component {
                                     valid={ this.state.validate.emailState === 'has-success' }
                                     invalid={ this.state.validate.emailState === 'has-danger' }
                                     onChange={ (e) => {
-                                        this.validateEmail(e);
                                         this.handleChange(e);
                                     } }
                                 />

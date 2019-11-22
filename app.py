@@ -38,21 +38,20 @@ def register():
     email = request.get_json()['email']
     password = bcrypt.generate_password_hash(request.get_json()['password']).decode('utf-8')
     created = datetime.utcnow()
+    role = "client"
 
-    cursor.execute("INSERT INTO users (first_name, created, last_name, password, email) VALUES ('" +
-                    str(first_name) + "','" +
-                    str(created) + "','" +
-                    str(last_name) + "','" +
-                    str(password) + "','" +
-                    str(email) + "')"
-                   )
+    sql = "INSERT INTO users (first_name, created, last_name, password, email, role) VALUES (%s,%s,%s,%s,%s,%s)"
+
+    data = (first_name, created, last_name, password, email, role)
+    cursor.execute(sql, data)
     con.commit()
     result = {
         'first_name': first_name,
         'created': created,
         'last_name': last_name,
         'password': password,
-        'email': email
+        'email': email,
+        'role': role
     }
 
     return jsonify({'result': result})
@@ -103,7 +102,7 @@ def getUsers():
 
     cursor.execute("SELECT u.first_name, u.last_name, u.id, DATE_FORMAT(p.start_date,'%m/%d/%Y') as start_date, t.type, IF(p.active, 'active', 'inactive') as active from users as u "
                    "left join pass as p on u.id = p.user_id "
-                   "left join pass_type as t on p.type_id = t.id;;")
+                   "left join pass_type as t on p.type_id = t.id where u.role = 'client';")
 
     #extract row headers for json
     row_headers = [x[0] for x in cursor.description]
@@ -194,14 +193,9 @@ def addWorkout():
 
 
 
-    cursor.execute("INSERT INTO workout (name, duration, limits, date, time, trainer_id) VALUES ('" +
-                    str(name) + "','" +
-                    str(duration) + "','" +
-                    str(limits) + "','" +
-                    str(date) + "','" +
-                    str(time) + "','" +
-                    str(trainer_id) + "')"
-                   )
+    sql="INSERT INTO workout (name, duration, limits, date, time, trainer_id) VALUES (%s,%s,%s,%s,%s,%s)"
+    data = (name, duration, limits, date, time, trainer_id)
+    cursor.execute(sql, data)
     con.commit()
     result = {
         'name': name,
@@ -233,7 +227,28 @@ def getWorkoutDetails(id):
     print(json.dumps(json_data))
     return json.dumps(json_data)
 
+@app.route('/admin/addTrainer', methods = ['POST'])
+def addTrainer():
+    con = mysql.connect()
+    cursor = con.cursor()
 
+    print(request.get_json())
+
+    first_name = request.get_json()['first_name']
+    last_name = request.get_json()['last_name']
+
+
+    sql="INSERT INTO trainer (first_name, last_name) VALUES (%s,%s);"
+    data = (first_name, last_name)
+    cursor.execute(sql, data)
+    con.commit()
+    result = {
+        'first_name': first_name,
+        'last_name': last_name,
+
+    }
+
+    return jsonify({'result': result})
 
 @app.route('/admin/workout/attendance', methods = ['POST'])
 def markAttendance():
@@ -328,7 +343,26 @@ def signUpUser():
     }
 
     return jsonify({'result': result})
+@app.route('/signout/class', methods = ['POST'])
+def signOutFromWorkout():
+    con = mysql.connect()
+    cursor = con.cursor()
 
+    user_id = request.get_json()['user_id']
+
+    sql="DELETE FROM users_workouts WHERE user_id = %s"
+    data = (user_id)
+
+
+
+    cursor.execute(sql, data)
+    con.commit()
+    result = {
+        'user_id': user_id,
+
+    }
+
+    return jsonify({'result': result})
 
 @app.route('/workout/getHistory', methods = ['GET'])
 def saveToExcel():
