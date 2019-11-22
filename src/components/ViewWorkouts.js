@@ -3,7 +3,6 @@ import axios from 'axios';
 import {Table} from "reactstrap/es";
 import {Redirect} from "react-router-dom";
 
-import {MdDelete, MdEdit} from 'react-icons/md';
 import {Button} from 'reactstrap'
 import Link from "react-router-dom/Link";
 

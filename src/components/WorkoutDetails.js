@@ -46,6 +46,7 @@ export default class WorkoutDetails extends Component {
                 workout_id: workout_id,
                 present: true
             })
+            .then(this.getEnrolledUsers)
             .then(response => {
                 console.log("Present")
             })
@@ -60,6 +61,7 @@ export default class WorkoutDetails extends Component {
                 workout_id: workout_id,
                 present: false
             })
+            .then(this.getEnrolledUsers)
             .then(response => {
                 console.log("Present")
             })
@@ -86,7 +88,7 @@ export default class WorkoutDetails extends Component {
             <td> {last_name}</td>
             <td>
                 <a className={`btn-floating btn-small waves-effect waves-light green ${persent === 1 ? 'disabled' : ''}`} onClick={() =>this.userIsPresent({user_id})} ><i className="material-icons">add</i></a>
-                <a className="btn-floating btn-small waves-effect waves-light red" onClick={() =>this.userIsAbsent({user_id})}><i className="material-icons">remove</i></a>
+                <a className={`btn-floating btn-small waves-effect waves-light red ${persent === 0 ? 'disabled' : ''}`} onClick={() =>this.userIsAbsent({user_id})}><i className="material-icons">remove</i></a>
             </td>
         </tr>
 
