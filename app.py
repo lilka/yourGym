@@ -67,18 +67,45 @@ def login():
     print(str(password))
     print(str(email))
 
-    cursor.execute("SELECT * FROM users where email ='" + str(email,) + "'")
+    sql = "SELECT * FROM users where email = %s'"
+    data = email
+
+    cursor.execute(sql,data)
+
     rv = cursor.fetchone()
-    print(rv[4])
-    print(rv)
+
 
     if bcrypt.check_password_hash(rv[3], password):
-        access_token = create_access_token(identity= {'id': rv[0], 'role': rv[6]})
+        access_token = create_access_token(identity= {'id': rv[0]})
         result = access_token
     else:
         result = jsonify({"error": "Invalid username and password"})
 
     return result
+
+@app.route('/admin/login', methods = ['POST'])
+def admin_login():
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    email = request.get_json()['email']
+    password = request.get_json()['password']
+    result = ""
+    print(str(password))
+    print(str(email))
+
+    cursor.execute("SELECT * FROM users where email ='" + str(email,) + "'")
+    rv = cursor.fetchone()
+
+
+    if bcrypt.check_password_hash(rv[3], password):
+        access_token = create_access_token(identity={'id': rv[0], 'role': rv[6]})
+        result = access_token
+    else:
+        result = jsonify({"error": "Invalid username and password"})
+
+    return result
+
 
 @app.route('/trainers', methods = ['GET'])
 def getTrainers():
