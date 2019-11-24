@@ -16,9 +16,8 @@ class UserProfile extends Component {
         const token = localStorage.usertoken
         const decoded = jwt_decode(token)
         this.setState({
-            first_name: decoded.identity.first_name,
-            last_name: decoded.identity.last_name,
-            email: decoded.identity.email
+            id: decoded.identity.id,
+            role: decoded.identity.role
         })
     }
 
@@ -32,16 +31,16 @@ class UserProfile extends Component {
                     <table className="table col-md-6 mx-auto">
                         <tbody>
                         <tr>
-                            <td>Fist Name</td>
-                            <td>{this.state.first_name}</td>
+                            <td>ID</td>
+                            <td>{this.state.id}</td>
                         </tr>
                         <tr>
-                            <td>Last Name</td>
-                            <td>{this.state.last_name}</td>
+                            <td>Role</td>
+                            <td>{this.state.role}</td>
                         </tr>
                         <tr>
                             <td>Email</td>
-                            <td>{this.state.email}</td>
+
                         </tr>
                         </tbody>
                     </table>

@@ -7,12 +7,15 @@ import Landing from "./components/Landing";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import UserProfile from "./components/UserProfile";
-import AdminPanel from "./components/AdminPanel";
-import ViewWorkouts from "./components/ViewWorkouts";
-import AddWorkout from "./components/AddWorkout";
-import EditWorkout from "./components/EditWorkout";
-import WorkoutDetails from "./components/WorkoutDetails";
-import ViewUser from "./components/ViewUser";
+import AdminPanel from "./components/Admin/AdminPanel";
+import ViewWorkouts from "./components/Admin/ViewWorkouts";
+import AddWorkout from "./components/Admin/AddWorkout";
+import EditWorkout from "./components/Admin/EditWorkout";
+import WorkoutDetails from "./components/Admin/WorkoutDetails";
+import ViewUser from "./components/Admin/ViewUser";
+import WorkoutSchedule from "./components/Client/WorkoutSchedule";
+import AddTrainer from "./components/Admin/AddTrainer";
+import {UserLogin} from "./components/UserLogin";
 
 class App extends Component {
  render(){
@@ -23,7 +26,7 @@ class App extends Component {
      <Route exact path ='/' component ={Landing} />
         <div className = "container">
            <Route exact path ='/register' component ={Register} />
-           <Route exact path ='/login' component ={Login} />
+           <Route exact path ='/login' component ={UserLogin} />
            <Route exact path ='/profile' component ={UserProfile} />
            <Route exact path ='/admin' component ={AdminPanel} />
            <Route exact path ='/admin/workouts' component ={ViewWorkouts} />
@@ -31,7 +34,9 @@ class App extends Component {
            <Route exact path = '/admin/add/workout' component={AddWorkout} />
            <Route exact path ='/admin/workout/update/:id' component={EditWorkout}/>
            <Route exact path ='/admin/workout/details/:id' component={WorkoutDetails}/>
+           <Route exact path ='/admin/addTrainer' component ={AddTrainer}/>
            <Route exact path = '/admin/users' component = {ViewUser}/>
+           <Route exact path ='/profile/schedule' component ={WorkoutSchedule}/>
         </div>
      </div>
    </Router>

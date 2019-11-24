@@ -70,9 +70,10 @@ def login():
     cursor.execute("SELECT * FROM users where email ='" + str(email,) + "'")
     rv = cursor.fetchone()
     print(rv[4])
+    print(rv)
 
     if bcrypt.check_password_hash(rv[3], password):
-        access_token = create_access_token(identity= {'first_name': rv[1], 'last_name': rv[4], 'email': rv[5]})
+        access_token = create_access_token(identity= {'id': rv[0], 'role': rv[6]})
         result = access_token
     else:
         result = jsonify({"error": "Invalid username and password"})
