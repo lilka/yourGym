@@ -6,4 +6,4 @@ const doLogin = user =>
     login(user).then(() => this.props.history.push('/profile'));
 
 export const UserLogin = () =>
-    <Login role='user'/>
+    <Login doLogin/>
