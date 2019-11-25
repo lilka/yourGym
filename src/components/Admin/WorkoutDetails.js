@@ -4,10 +4,14 @@ import {Table} from "reactstrap/es";
 import {Button} from 'reactstrap';
 
 
+const Toggle = ({className, onClick, icon })  =>
+     <a className={`btn-floating btn-small waves-effect waves-light  ${className}`} onClick={onClick} ><i className="material-icons">{icon}</i></a>
+
+
 export default class WorkoutDetails extends Component {
     constructor(props) {
-        super(props)
 
+        super(props)
         this.state = {
             user_id:null,
             enrolled_user :[],
@@ -29,17 +33,14 @@ export default class WorkoutDetails extends Component {
         this.signUpUser = this.signUpUser.bind(this);
         this.userIsAbsent = this.userIsAbsent.bind(this);
         this.userIsPresent = this.userIsPresent.bind(this);
-
-
     }
 
     handelUserChange(e)  {
         this.setState({user_id : e.target.value});
     }
 
-
     userIsPresent = ({user_id}) => {
-        let workout_id = this.props.match.params.id;
+        const workout_id = this.props.match.params.id;
         axios
             .post('/admin/workout/attendance', {
                 user_id: user_id,
@@ -68,7 +69,7 @@ export default class WorkoutDetails extends Component {
     }
 
     signUpUser = () => {
-        let workout_id = this.props.match.params.id;
+        const workout_id = this.props.match.params.id;
         console.log(this.state.user_id)
         axios
             .post('/signup/class', {
@@ -87,21 +88,18 @@ export default class WorkoutDetails extends Component {
             <td> {first_name}</td>
             <td> {last_name}</td>
             <td>
-                <a className={`btn-floating btn-small waves-effect waves-light green ${persent === 1 ? 'disabled' : ''}`} onClick={() =>this.userIsPresent({user_id})} ><i className="material-icons">add</i></a>
-                <a className={`btn-floating btn-small waves-effect waves-light red ${persent === 0 ? 'disabled' : ''}`} onClick={() =>this.userIsAbsent({user_id})}><i className="material-icons">remove</i></a>
+               <Toggle className={`green ${persent === 1 ? 'disabled' : ''}`} onClick={()=>this.userIsPresent({user_id, })} icon={"add"} />
+               <Toggle  className={`red ${persent === 0 ? 'disabled' : ''}`} onClick={()=>this.userIsAbsent({user_id, })} icon={"remove"} />
             </td>
         </tr>
 
 
     getEnrolledUsers = () => {
-        let id = this.props.match.params.id;
+        const id = this.props.match.params.id;
         axios
             .get(`/admin/workout/details/${id}`)
             .then((response) => {
-                console.log("response", response);
                 const enrolled_user = response.data;
-                console.log("response", response)
-                console.log("users",enrolled_user);
                 this.setState({enrolled_user: enrolled_user});
 
             })
@@ -125,7 +123,7 @@ export default class WorkoutDetails extends Component {
     }
 
     getWorkoutDetails(){
-        let workout_id = this.props.match.params.id
+        const workout_id = this.props.match.params.id
         axios.get(`/admin/workout/getWorkout/${workout_id}`)
             .then(response => {
                 const workout = response.data;
@@ -162,11 +160,11 @@ export default class WorkoutDetails extends Component {
                     <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20 }}>{this.state.name}</p>
                     <ul className={"collection"}>
                         <li className={"collection-item"} style={{textAlign: "left"}}><strong>{this.state.date} at {this.state.time}</strong></li>
-                        <li className={"collection-item"} style={{textAlign: "left"}}>Trainer:{this.state.trainer_first_name} {this.state.trainer_last_name}  Limits: {this.state.limits}</li>
+                        <li className={"collection-item"} style={{textAlign: "left"}}>Trener:{this.state.trainer_first_name} {this.state.trainer_last_name}  Limit miejsc: {this.state.limits}</li>
                     </ul>
                 </div>
                 <div>
-                    <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20}}>Attendance list</p>
+                    <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20}}>Lista uczestników</p>
                 <Table striped size="sm" responsive="xl" hover={true} >
                     <thead>
                     <tr>

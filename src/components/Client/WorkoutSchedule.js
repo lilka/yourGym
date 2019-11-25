@@ -27,8 +27,8 @@ export default class WorkoutSchedule extends Component {
             <td>{time}</td>
             <td>{trainer_first_name } {trainer_last_name}</td>
             <td>
-                <a class="waves-effect waves-light btn-small green" onClick={()=>this.signUpUser({id})}>Join</a>
-                <a class="waves-effect waves-light btn-small red"  onClick={()=>this.signUpUser()}>Leave</a>
+                <a class="waves-effect waves-light btn-small green" onClick={()=>this.signUpUser({id})}>Dołącz</a>
+                <a class="waves-effect waves-light btn-small red"  onClick={()=>this.signUpUser()}>Opusc</a>
 
             </td>
         </tr>

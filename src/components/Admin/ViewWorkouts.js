@@ -14,6 +14,7 @@ export default class ViewWorkouts extends Component {
             workouts : [],
         }
         this.getWorkouts = this.getWorkouts.bind(this);
+        this.deleteWorkout = this.deleteWorkout.bind(this);
 
     }
 
@@ -37,10 +38,6 @@ export default class ViewWorkouts extends Component {
         axios
             .post('/admin/workout/delete' ,{'id': id})
             .then(this.getWorkouts)
-            .then(console.log("Deleted"))
-
-
-
             .catch(err => {
                 console.log(err);
             })

@@ -35,18 +35,13 @@ class Login extends Component {
 
     checkUser(){
         const token = localStorage.usertoken
-        const decoded = jwt_decode(token)
-        const id = decoded.identity.id
-        const role = decoded.identity.role
-        console.log(role)
-        if (role == 'admin'){
-          return  this.props.history.push('/admin')
-
+        const decoded = jwt_decode(token);
+        const {id, role} = decoded.identity;
+        if (role == 'admin') {
+            return this.props.history.push('/admin')
+        } else {
+            return this.props.history.push(`/profile/${id}`)
         }
-        else{
-           return this.props.history.push(`/profile/${id}`)
-        }
-
     }
 
 
