@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import axios from "axios";
-import {getWorkoutDetails} from "../WorkoutFunction";
+
 
 
 
@@ -44,7 +44,7 @@ export default class EditWorkout extends Component {
     }
 
     getWorkoutDetails(){
-        let workout_id = this.props.match.params.id;
+        const workout_id = this.props.match.params.id;
         axios.get(`/admin/workout/getWorkout/${workout_id}`)
             .then(response => {
                 const workout = response.data;
@@ -120,9 +120,9 @@ export default class EditWorkout extends Component {
                 <div className={"row"}>
                     <div className="col-md-6 mt-5 mx-auto">
                         <form noValidate onSubmit={this.onSubmit}>
-                            <h1 className={"h3 mb-3 font-weight-normal"}>Edit workout </h1>
+                            <h1 className={"h3 mb-3 font-weight-normal"}>Edytuj trening </h1>
                             <div className={"form-group"}>
-                                <label htmlFor={"name"}> Name </label>
+                                <label htmlFor={"name"}> Imie </label>
                                 <input
                                     type={"text"}
                                     className={"form-control"}
@@ -132,7 +132,7 @@ export default class EditWorkout extends Component {
                                 />
                             </div>
                             <div className={"form-group"}>
-                                <label htmlFor={"duration"}> Duration</label>
+                                <label htmlFor={"duration"}> Czas treningu</label>
                                 <input
                                     type={"number"}
                                     className={"form-control"}
@@ -142,7 +142,7 @@ export default class EditWorkout extends Component {
                                 />
                             </div>
                             <div className={"form-group"}>
-                                <label htmlFor={"limits"}> Limits</label>
+                                <label htmlFor={"limits"}> Limit miejsc</label>
                                 <input
                                     type={"number"}
                                     className={"form-control"}
@@ -152,7 +152,7 @@ export default class EditWorkout extends Component {
                                 />
                             </div>
                             <div className={"form-group"}>
-                                <label htmlFor={"limits"}> Trainers</label>
+                                <label htmlFor={"limits"}> Trenerzy</label>
                                 <select
                                     value = {trainer_id}
                                     className={"form-control"}
@@ -161,7 +161,7 @@ export default class EditWorkout extends Component {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label htmlFor={"date"}>Date</label>
+                                <label htmlFor={"date"}>Data</label>
                                 <input
                                     type={"date"}
                                     className={"form-control"}
@@ -171,7 +171,7 @@ export default class EditWorkout extends Component {
                                 />
                             </div>
                             <div className={"form-group"}>
-                                <label htmlFor={"time"}>Time</label>
+                                <label htmlFor={"time"}>Godzina</label>
                                 <input
                                     type={"time"}
                                     className={"form-control"}
@@ -184,7 +184,7 @@ export default class EditWorkout extends Component {
                             <button
                                 type={"submit"}
                                 className={"btn btn-primary"}>
-                                Save
+                                Zapisz
                             </button>
                         </form>
                     </div>

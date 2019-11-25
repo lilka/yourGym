@@ -170,9 +170,9 @@ export default class WorkoutDetails extends Component {
                 <Table striped size="sm" responsive="xl" hover={true} >
                     <thead>
                     <tr>
-                        <th>First_name</th>
-                        <th>Last_name</th>
-                        <th>Actions</th>
+                        <th>Imie</th>
+                        <th>Nazwisko</th>
+                        <th>Zaznacz obecnosc</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -182,15 +182,15 @@ export default class WorkoutDetails extends Component {
 
                 </div>
                 <div >
-                    <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20}}>Select user to sign him/her up </p>
+                    <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20}}>Wybiez uzytkownika, aby go zapisac </p>
                     <select
                         className={"form-control"}
                         value = {this.state.user_id}
                         onChange = {this.handelUserChange}
                         style={{width:"300px"}}>
-                        <option>Please select </option>
+                        <option>Wybierz uzytkownika </option>
                         {this.state.all_users.map(optionItems)} </select>
-                     <Button onClick={()=>this.signUpUser()}>Sign up </Button>
+                     <Button onClick={()=>this.signUpUser()}>Zapisz</Button>
                  </div>
             </div>
         );

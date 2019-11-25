@@ -89,66 +89,66 @@ export default class AddWorkout extends Component {
                             <form noValidate onSubmit={this.onSubmit}>
                                 <h1 className={"h3 mb-3 font-weight-normal"}>Add workout </h1>
                                 <div className={"form-group"}>
-                                    <label htmlFor={"name"}> Name </label>
+                                    <label htmlFor={"name"}> Nazwa </label>
                                     <input
                                         type={"text"}
                                         className={"form-control"}
                                         name={"name"}
-                                        placeholder={"enter name of workout"}
+                                        placeholder={"podaj nazwe treningu"}
                                         value= {name}
                                         onChange={this.onChange}
                                     />
                                 </div>
                                 <div className={"form-group"}>
-                                    <label htmlFor={"duration"}> Duration</label>
+                                    <label htmlFor={"duration"}> Czas trwania</label>
                                     <input
                                         type={"number"}
                                         className={"form-control"}
                                         name={"duration"}
-                                        placeholder={"enter duration of workout"}
+                                        placeholder={"podaj czas trwania treningu"}
                                         value={duration}
                                         onChange={this.onChange}
                                     />
                                 </div>
                                 <div className={"form-group"}>
-                                    <label htmlFor={"limits"}> Limits</label>
+                                    <label htmlFor={"limits"}> Limit miejsc</label>
                                     <input
                                         type={"number"}
                                         className={"form-control"}
                                         name={"limits"}
-                                        placeholder={"enter limits form workout"}
+                                        placeholder={"wprowadz limit miejsc"}
                                         value={limits}
                                         onChange={this.onChange}
                                     />
                                 </div>
                                 <div className={"form-group"}>
-                                    <label htmlFor={"limits"}> Trainers</label>
+                                    <label htmlFor={"trainers"}> Trenerzy</label>
                                     <select
                                         value = {trainer_id}
                                         className={"form-control"}
                                         onChange = {this.handelTrainerChange} >
-                                        <option>Please select </option>
+                                        <option>Wybierz trenera </option>
                                         {trainers.map(optionItems)}
                                     </select>
                                 </div>
                                 <div className={"form-group"}>
-                                    <label htmlFor={"date"}>Date</label>
+                                    <label htmlFor={"date"}>Data</label>
                                     <input
                                         type={"date"}
                                         className={"form-control"}
                                         name={"date"}
-                                        placeholder={"enter date"}
+                                        placeholder={"Podaj date"}
                                         value={date}
                                         onChange={this.onChange}
                                     />
                                 </div>
                                 <div className={"form-group"}>
-                                    <label htmlFor={"time"}>Time</label>
+                                    <label htmlFor={"time"}>Czas</label>
                                     <input
                                         type={"time"}
                                         className={"form-control"}
                                         name={"time"}
-                                        placeholder={"enter time"}
+                                        placeholder={"Podaj czas treningu"}
                                         value={time}
                                         onChange={this.onChange}
                                     />
@@ -156,7 +156,7 @@ export default class AddWorkout extends Component {
                                 <button
                                     type={"submit"}
                                     className={"btn btn-primary"}>
-                                    Add
+                                    Dodaj trening
                                 </button>
                             </form>
                         </div>

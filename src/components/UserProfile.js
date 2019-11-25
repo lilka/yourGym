@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import jwt_decode from 'jwt-decode'
+import axios from "axios";
 
 class UserProfile extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             first_name: '',
             last_name: '',
@@ -12,13 +13,26 @@ class UserProfile extends Component {
         }
     }
 
+    getUserInfo(){
+        const user_id = this.props.match.params.id;
+        axios.get(`/profile/${user_id}`)
+            .then(response => {
+                const user = response.data;
+                this.setState({
+                    id: user[0].id,
+                    first_name: user[0].first_name,
+                    last_name:user[0].last_name,
+                    email: user[0].email,
+
+                });
+            })
+
+            .catch(error => {console.log(error)});
+    }
+
+
     componentDidMount() {
-        const token = localStorage.usertoken
-        const decoded = jwt_decode(token)
-        this.setState({
-            id: decoded.identity.id,
-            role: decoded.identity.role
-        })
+        this.getUserInfo()
     }
 
     render() {
@@ -31,15 +45,16 @@ class UserProfile extends Component {
                     <table className="table col-md-6 mx-auto">
                         <tbody>
                         <tr>
-                            <td>ID</td>
-                            <td>{this.state.id}</td>
+                            <td>Imię</td>
+                            <td>{this.state.first_name}</td>
                         </tr>
                         <tr>
-                            <td>Role</td>
-                            <td>{this.state.role}</td>
+                            <td>Nazwisko</td>
+                            <td>{this.state.last_name}</td>
                         </tr>
                         <tr>
                             <td>Email</td>
+                            <td>{this.state.email}</td>
 
                         </tr>
                         </tbody>

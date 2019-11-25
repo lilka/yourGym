@@ -26,8 +26,8 @@ class App extends Component {
      <Route exact path ='/' component ={Landing} />
         <div className = "container">
            <Route exact path ='/register' component ={Register} />
-           <Route exact path ='/login' component ={UserLogin} />
-           <Route exact path ='/profile' component ={UserProfile} />
+           <Route exact path ='/login' component ={Login} />
+           <Route exact path ='/profile/:id' component ={UserProfile} />
            <Route exact path ='/admin' component ={AdminPanel} />
            <Route exact path ='/admin/workouts' component ={ViewWorkouts} />
            <Route exact path = '/admin/workout/delete' component={ViewWorkouts} />
@@ -36,7 +36,7 @@ class App extends Component {
            <Route exact path ='/admin/workout/details/:id' component={WorkoutDetails}/>
            <Route exact path ='/admin/addTrainer' component ={AddTrainer}/>
            <Route exact path = '/admin/users' component = {ViewUser}/>
-           <Route exact path ='/profile/schedule' component ={WorkoutSchedule}/>
+           <Route exact path ='/schedule' component ={WorkoutSchedule}/>
         </div>
      </div>
    </Router>

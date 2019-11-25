@@ -26,7 +26,7 @@ export default class ViewWorkouts extends Component {
             <td>{time}</td>
             <td>{trainer_first_name } {trainer_last_name}</td>
             <td>
-                <a className="btn-floating btn-small waves-effect waves-light blue" onClick = {()=>{if (window.confirm('Are you sure you wish to delete this workout?')) this.deleteWorkout({id}) }} ><i className="material-icons">delete</i></a>
+                <a className="btn-floating btn-small waves-effect waves-light blue" onClick = {()=>{if (window.confirm('Jestes pewny, ze chcesz usunac ten trening?')) this.deleteWorkout({id}) }} ><i className="material-icons">delete</i></a>
                 <Link  link to={`/admin/workout/update/${id}`}><i className="material-icons left">edit</i></Link>
                 <Link  link to={`/admin/workout/details/${id}`}><i className="material-icons left">details</i></Link>
             </td>
@@ -73,18 +73,18 @@ export default class ViewWorkouts extends Component {
                     <Button color="success"
                             href="/admin/add/workout"
                             style={{width:"300px"}}>
-                        Add workout </Button>
+                        Dodaj trening </Button>
                 </div>
             <Table striped>
                 <thead>
                 <tr>
-                    <th>Workout name</th>
-                    <th>Duration</th>
-                    <th>Limits</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Trainer</th>
-                    <th>Action</th>
+                    <th>Nazwa</th>
+                    <th>Czas trwania</th>
+                    <th>Limit miejsc</th>
+                    <th>Data</th>
+                    <th>Godzina</th>
+                    <th>Trener</th>
+                    <th>Akcje</th>
                 </tr>
                 </thead>
                 <tbody>

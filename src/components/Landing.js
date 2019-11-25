@@ -5,7 +5,7 @@ class Landing extends Component {
         return(
             <div className="container">
                 <div className="jumbotron mt-5">
-                    <h1 className="welcome-text"> Welcome in YourGym</h1>
+                    <h1 className="welcome-text"> Witamy w YourGym</h1>
                 </div>
             </div>
         )

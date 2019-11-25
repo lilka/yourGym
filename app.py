@@ -67,21 +67,44 @@ def login():
     print(str(password))
     print(str(email))
 
-    sql = "SELECT * FROM users where email = %s'"
+
+    sql = "SELECT * FROM users where email = %s"
     data = email
 
     cursor.execute(sql,data)
 
     rv = cursor.fetchone()
-
+    print(rv[6])
+    print(rv[0])
 
     if bcrypt.check_password_hash(rv[3], password):
-        access_token = create_access_token(identity= {'id': rv[0]})
+        access_token = create_access_token(identity= {'id': rv[0], 'role': rv[6]})
         result = access_token
     else:
         result = jsonify({"error": "Invalid username and password"})
 
     return result
+
+
+@app.route('/profile/<int:id>', methods = ['GET'])
+def get_user_profile(id):
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    sql = "SELECT * FROM users where id = %s"
+    data = id
+
+    cursor.execute(sql,data)
+
+    row_headers = [x[0] for x in cursor.description]
+    rv = cursor.fetchall()
+    json_data = []
+    for result in rv:
+        json_data.append(dict(zip(row_headers, result)))
+    print(json.dumps(json_data))
+    return json.dumps(json_data)
+
+
 
 @app.route('/admin/login', methods = ['POST'])
 def admin_login():
@@ -96,6 +119,8 @@ def admin_login():
 
     cursor.execute("SELECT * FROM users where email ='" + str(email,) + "'")
     rv = cursor.fetchone()
+    print(rv[6])
+    print(rv[0])
 
 
     if bcrypt.check_password_hash(rv[3], password):

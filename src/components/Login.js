@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {login} from './UserFunction'
 import {FormGroup, FormFeedback} from "reactstrap/es";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 
 class Login extends Component {
@@ -31,6 +33,22 @@ class Login extends Component {
         });
     };
 
+    checkUser(){
+        const token = localStorage.usertoken
+        const decoded = jwt_decode(token)
+        const id = decoded.identity.id
+        const role = decoded.identity.role
+        console.log(role)
+        if (role == 'admin'){
+          return  this.props.history.push('/admin')
+
+        }
+        else{
+           return this.props.history.push(`/profile/${id}`)
+        }
+
+    }
+
 
     onSubmit(e) {
         e.preventDefault()
@@ -40,10 +58,23 @@ class Login extends Component {
             password: this.state.password
         }
 
-        this.props.doLogin(user)
-
-
+        axios
+            .post('users/login', {
+                email: user.email,
+                password: user.password
+            })
+            .then(response => {
+                localStorage.setItem('usertoken', response.data)
+                return response.data
+            })
+            .then(response =>{
+                this.checkUser()
+            }).catch(err=>console.log(err))
     }
+
+
+
+
 
 
     render() {
@@ -51,14 +82,14 @@ class Login extends Component {
                 <div className="row">
                     <div className="col-md-6 mt-5 mx-auto">
                         <form noValidate onSubmit={this.onSubmit}>
-                            <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+                            <h1 className="h3 mb-3 font-weight-normal">Zaloguj sie!</h1>
                             <div className="form-group">
-                                <label htmlFor="email">Email address</label>
+                                <label htmlFor="email">Adres email</label>
                                 <input
                                     type="email"
                                     className="form-control"
                                     name="email"
-                                    placeholder="Enter email"
+                                    placeholder="Email"
                                     value={this.state.email}
                                     onChange={ (e) => {
                                         this.handleChange(e);
@@ -67,12 +98,12 @@ class Login extends Component {
 
                             </div>
                             <div className="form-group">
-                                <label htmlFor="password">Password</label>
+                                <label htmlFor="password">Haslo</label>
                                 <input
                                     type="password"
                                     className="form-control"
                                     name="password"
-                                    placeholder="Password"
+                                    placeholder="haslo"
                                     value={this.state.password}
                                     onChange={this.handleChange}
                                 />
@@ -81,7 +112,7 @@ class Login extends Component {
                                 type="submit"
                                 className="btn btn-lg btn-primary btn-block"
                             >
-                                Sign in
+                                Zaloguj!
                             </button>
                         </form>
                     </div>

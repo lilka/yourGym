@@ -27,8 +27,8 @@ export default class WorkoutSchedule extends Component {
             <td>{time}</td>
             <td>{trainer_first_name } {trainer_last_name}</td>
             <td>
-                <Button color={"success"} onClick={()=>this.signUpUser({id})}>Join</Button>
-                <Button color={"danger"} onClick={()=>this.signUpUser()}>Leave</Button>
+                <a class="waves-effect waves-light btn-small green" onClick={()=>this.signUpUser({id})}>Join</a>
+                <a class="waves-effect waves-light btn-small red"  onClick={()=>this.signUpUser()}>Leave</a>
 
             </td>
         </tr>
@@ -63,19 +63,7 @@ export default class WorkoutSchedule extends Component {
 
 
 
-    deleteWorkout =  ({id}) => {
 
-        axios
-            .post('/admin/workout/delete' ,{'id': id})
-            .then(this.getWorkouts)
-            .then(console.log("Deleted"))
-
-
-
-            .catch(err => {
-                console.log(err);
-            })
-    }
 
     getWorkouts = () => {
         axios
@@ -100,17 +88,17 @@ export default class WorkoutSchedule extends Component {
     render() {
         return(
             <div>
-                <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20 }}>Workout schedule</p>
+                <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20 }}>Grafik zajec</p>
                 <Table striped>
                     <thead>
                     <tr>
-                        <th>Workout name</th>
-                        <th>Duration</th>
-                        <th>Limits</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Trainer</th>
-                        <th>Action</th>
+                        <th>Naza</th>
+                        <th>Czas trwania</th>
+                        <th>Limit miejsc</th>
+                        <th>Data</th>
+                        <th>Godzina</th>
+                        <th>Trener</th>
+                        <th>Akcje</th>
                     </tr>
                     </thead>
                     <tbody>

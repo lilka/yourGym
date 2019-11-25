@@ -47,7 +47,7 @@ class Register extends Component {
                                  type={"text"}
                                  className={"form-control"}
                                  name={"first_name"}
-                                 placeholder={"enter first name"}
+                                 placeholder={"podaj imie"}
                                  value={this.state.first_name}
                                  onChange={this.onChange}
                              />
@@ -58,7 +58,7 @@ class Register extends Component {
                                  type={"text"}
                                  className={"form-control"}
                                  name={"last_name"}
-                                 placeholder={"enter last name"}
+                                 placeholder={"podaj nazwisko"}
                                  value={this.state.last_name}
                                  onChange={this.onChange}
                              />
@@ -69,7 +69,7 @@ class Register extends Component {
                                  type={"email"}
                                  className={"form-control"}
                                  name={"email"}
-                                 placeholder={"enter email"}
+                                 placeholder={"podaj email"}
                                  value={this.state.email}
                                  onChange={this.onChange}
                              />
@@ -80,7 +80,7 @@ class Register extends Component {
                                  type={"password"}
                                  className={"form-control"}
                                  name={"password"}
-                                 placeholder={"enter password"}
+                                 placeholder={"podaj haslo"}
                                  value={this.state.password}
                                  onChange={this.onChange}
                              />
@@ -88,7 +88,7 @@ class Register extends Component {
                          <button
                              type={"submit"}
                              className={"btn btn-primary"}>
-                             Register!
+                             Zarejestruj!
                          </button>
                      </form>
                  </div>
