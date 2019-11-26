@@ -25,7 +25,7 @@ app = Flask(__name__)
 
 if 'CLEARDB_DATABASE_URL' in os.environ:
 
-    url = urlparse.urlparse(os.environ['CLEARDB_DATABASE_URL'])
+    url = urlparse(os.environ['CLEARDB_DATABASE_URL'])
     app.config['MYSQL_DATABASE_HOST'] = url.hostname
     app.config['MYSQL_DATABASE_USER'] = url.username
     app.config['MYSQL_DATABASE_PASSWORD'] = url.password
