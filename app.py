@@ -1,3 +1,6 @@
+import os
+
+
 from flask import Flask, render_template, request, json, jsonify
 from flaskext.mysql import MySQL
 from flask_bcrypt import Bcrypt
@@ -5,6 +8,13 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token
 from datetime import datetime, date
 import pandas
+from urllib.parse import urlparse
+
+
+
+
+
+
 
 
 import yaml
@@ -13,10 +23,21 @@ db = yaml.load(open('db.yaml'))
 
 app = Flask(__name__)
 
-app.config['MYSQL_DATABASE_HOST'] = db['mysql_host']
-app.config['MYSQL_DATABASE_USER'] = db['mysql_user']
-app.config['MYSQL_DATABASE_PASSWORD'] = db['mysql_password']
-app.config['MYSQL_DATABASE_DB'] = db['mysql_db']
+if os.environ['DATABASE_URL']:
+
+    url = urlparse.urlparse(os.environ['DATABASE_URL'])
+    app.config['MYSQL_DATABASE_HOST'] = url.hostname
+    app.config['MYSQL_DATABASE_USER'] = url.username
+    app.config['MYSQL_DATABASE_PASSWORD'] = url.password
+    app.config['MYSQL_DATABASE_DB'] = url.path
+
+else:
+    app.config['MYSQL_DATABASE_HOST'] = db['mysql_host']
+    app.config['MYSQL_DATABASE_USER'] = db['mysql_user']
+    app.config['MYSQL_DATABASE_PASSWORD'] = db['mysql_password']
+    app.config['MYSQL_DATABASE_DB'] = db['mysql_db']
+
+
 app.config['MYSQL_DATABASE_CURSORCLASS'] = 'DictCursor'
 app.config['JWT_SECRET_KEY'] = 'secret'
 
@@ -36,7 +57,9 @@ def register():
     first_name = request.get_json()['first_name']
     last_name = request.get_json()['last_name']
     email = request.get_json()['email']
+
     password = bcrypt.generate_password_hash(request.get_json()['password']).decode('utf-8')
+
     created = datetime.utcnow()
     role = "client"
 
@@ -117,10 +140,12 @@ def admin_login():
     print(str(password))
     print(str(email))
 
-    cursor.execute("SELECT * FROM users where email ='" + str(email,) + "'")
+
+    sql = "SELECT * FROM users where email = %s"
+    data = email
+    cursor.execute(sql, data)
     rv = cursor.fetchone()
-    print(rv[6])
-    print(rv[0])
+
 
 
     if bcrypt.check_password_hash(rv[3], password):
@@ -344,7 +369,8 @@ def updateWorkout(id):
 
 
 
-    sql = "UPDATE  workout SET name = %s, duration = %s, limits = %s, date = %s, time = %s, trainer_id = %s WHERE id = %s"
+    sql = "UPDATE  workout SET name = %s, duration = %s, " \
+          "limits = %s, date = %s, time = %s, trainer_id = %s WHERE id = %s"
     data = (name, duration, limits, date, time, trainer_id, id)
 
     cursor.execute(sql, data)
