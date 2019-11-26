@@ -3,6 +3,14 @@ import {login} from './UserFunction'
 import {FormGroup, FormFeedback} from "reactstrap/es";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import {FormErrors} from "./FormErrors";
+import styled from 'styled-components';
+
+
+
+const Error = styled.div`
+  background-color: red;
+`;
 
 
 class Login extends Component {
@@ -12,10 +20,15 @@ class Login extends Component {
             email:'',
             password: '',
             id: '',
-            errors: {},
+            formErrors: {email: '', password: ''},
+            isError: false,
+
+            emailValid: false,
+            passwordValid: false,
+            formValid: false
 
         },
-        this.handleChange= this.handleChange.bind(this)
+        this.handleUserInput= this.handleUserInput.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
     }
 
@@ -24,14 +37,43 @@ class Login extends Component {
 
 
 
+    handleUserInput = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        this.setState({[name]: value},
+            () => { this.validateField(name, value) });
+    }
+    validateField(fieldName, value) {
+        let fieldValidationErrors = this.state.formErrors;
+        let emailValid = this.state.emailValid;
+        let passwordValid = this.state.passwordValid;
 
-    handleChange = async (event) => {
-        const { target } = event;
-        const { name } = target;
-        await this.setState({
-            [ name ]: event.target.value,
-        });
-    };
+        switch(fieldName) {
+            case 'email':
+                emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+                fieldValidationErrors.email = emailValid ? '' : ' is invalid';
+                break;
+            case 'password':
+                passwordValid = value.length >= 6;
+                fieldValidationErrors.password = passwordValid ? '': ' is too short';
+                break;
+            default:
+                break;
+        }
+        this.setState({formErrors: fieldValidationErrors,
+            emailValid: emailValid,
+            passwordValid: passwordValid
+        }, this.validateForm);
+    }
+
+    validateForm() {
+        this.setState({formValid: this.state.emailValid && this.state.passwordValid});
+    }
+
+    errorClass(error) {
+        return(error.length === 0 ? '' : 'has-error');
+    }
+
 
     checkUser(){
         const token = localStorage.usertoken
@@ -64,7 +106,8 @@ class Login extends Component {
             })
             .then(response =>{
                 this.checkUser()
-            }).catch(err=>console.log(err))
+            }).catch(err=> this.setState({isError: true}));
+
     }
 
 
@@ -75,10 +118,16 @@ class Login extends Component {
     render() {
         return(  <div className="container">
                 <div className="row">
+
                     <div className="col-md-6 mt-5 mx-auto">
+                        { this.state.isError ?  <div className={"alert alert-danger"} role="alert">Haslo lub email jest niepoprawne</div>   : " "}
+
                         <form noValidate onSubmit={this.onSubmit}>
                             <h1 className="h3 mb-3 font-weight-normal">Zaloguj sie!</h1>
-                            <div className="form-group">
+                            <div className={"panel panel-default"}>
+                                <FormErrors formErrors={this.state.formErrors} />
+                            </div>
+                            <div className={`form-group  ${this.errorClass(this.state.formErrors.email)}`}>
                                 <label htmlFor="email">Adres email</label>
                                 <input
                                     type="email"
@@ -87,12 +136,12 @@ class Login extends Component {
                                     placeholder="Email"
                                     value={this.state.email}
                                     onChange={ (e) => {
-                                        this.handleChange(e);
+                                        this.handleUserInput(e);
                                     } }
                                 />
 
                             </div>
-                            <div className="form-group">
+                            <div className={`form-group ${this.errorClass(this.state.formErrors.password)}`}>
                                 <label htmlFor="password">Haslo</label>
                                 <input
                                     type="password"
@@ -100,16 +149,18 @@ class Login extends Component {
                                     name="password"
                                     placeholder="haslo"
                                     value={this.state.password}
-                                    onChange={this.handleChange}
+                                    onChange={this.handleUserInput}
                                 />
                             </div>
                             <button
                                 type="submit"
                                 className="btn btn-lg btn-primary btn-block"
+                                disabled={!this.state.formValid}
                             >
                                 Zaloguj!
                             </button>
                         </form>
+
                     </div>
                 </div>
             </div>

@@ -47,12 +47,8 @@ export default class ViewWorkouts extends Component {
         axios
             .get('/admin/workouts')
             .then((response) => {
-                console.log("response", response);
                 const workouts = response.data;
-                console.log("response", response)
-                console.log("workouts",workouts);
                 this.setState({workouts});
-
             })
             .catch (error => {
                 console.log(error)

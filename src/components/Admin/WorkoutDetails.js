@@ -7,6 +7,17 @@ import {Button} from 'reactstrap';
 const Toggle = ({className, onClick, icon })  =>
      <a className={`btn-floating btn-small waves-effect waves-light  ${className}`} onClick={onClick} ><i className="material-icons">{icon}</i></a>
 
+const Row = ({first_name, last_name, user_id, present}) =>
+    <tr id={user_id}>
+        <td> {first_name}</td>
+        <td> {last_name}</td>
+        <td>
+            <Toggle className={`green ${present === 1 ? 'disabled' : ''}`} onClick={()=>this.userIsPresent({user_id, })} icon={"add"} />
+            <Toggle  className={`red ${present === 0 ? 'disabled' : ''}`} onClick={()=>this.userIsAbsent({user_id, })} icon={"remove"} />
+        </td>
+    </tr>
+
+
 
 export default class WorkoutDetails extends Component {
     constructor(props) {
@@ -83,15 +94,6 @@ export default class WorkoutDetails extends Component {
             })
     }
 
-    Row = ({first_name, last_name, user_id, persent}) =>
-        <tr id={user_id}>
-            <td> {first_name}</td>
-            <td> {last_name}</td>
-            <td>
-               <Toggle className={`green ${persent === 1 ? 'disabled' : ''}`} onClick={()=>this.userIsPresent({user_id, })} icon={"add"} />
-               <Toggle  className={`red ${persent === 0 ? 'disabled' : ''}`} onClick={()=>this.userIsAbsent({user_id, })} icon={"remove"} />
-            </td>
-        </tr>
 
 
     getEnrolledUsers = () => {
@@ -165,6 +167,7 @@ export default class WorkoutDetails extends Component {
                 </div>
                 <div>
                     <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20}}>Lista uczestników</p>
+
                 <Table striped size="sm" responsive="xl" hover={true} >
                     <thead>
                     <tr>
@@ -174,7 +177,7 @@ export default class WorkoutDetails extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {this.state.enrolled_user.map(this.Row)}
+                    {this.state.enrolled_user.map(Row)}
                     </tbody>
                 </Table>
 

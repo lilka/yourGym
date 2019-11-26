@@ -57,13 +57,8 @@ export default class AddWorkout extends Component {
         axios
             .get('/trainers')
             .then((response) => {
-                console.log("response", response);
                 const trainers = response.data;
-                console.log("response", response)
-                console.log("trainers",trainers);
                 this.setState({trainers: trainers});
-                console.log("state", this.state.trainers)
-
             })
             .catch (error => {
                 console.log(error)
@@ -97,6 +92,7 @@ export default class AddWorkout extends Component {
                                         placeholder={"podaj nazwe treningu"}
                                         value= {name}
                                         onChange={this.onChange}
+                                        required
                                     />
                                 </div>
                                 <div className={"form-group"}>
@@ -108,6 +104,7 @@ export default class AddWorkout extends Component {
                                         placeholder={"podaj czas trwania treningu"}
                                         value={duration}
                                         onChange={this.onChange}
+                                        required
                                     />
                                 </div>
                                 <div className={"form-group"}>
@@ -119,6 +116,7 @@ export default class AddWorkout extends Component {
                                         placeholder={"wprowadz limit miejsc"}
                                         value={limits}
                                         onChange={this.onChange}
+                                        required
                                     />
                                 </div>
                                 <div className={"form-group"}>
@@ -126,6 +124,7 @@ export default class AddWorkout extends Component {
                                     <select
                                         value = {trainer_id}
                                         className={"form-control"}
+                                        required
                                         onChange = {this.handelTrainerChange} >
                                         <option>Wybierz trenera </option>
                                         {trainers.map(optionItems)}
@@ -140,6 +139,7 @@ export default class AddWorkout extends Component {
                                         placeholder={"Podaj date"}
                                         value={date}
                                         onChange={this.onChange}
+                                        required
                                     />
                                 </div>
                                 <div className={"form-group"}>
@@ -151,6 +151,7 @@ export default class AddWorkout extends Component {
                                         placeholder={"Podaj czas treningu"}
                                         value={time}
                                         onChange={this.onChange}
+                                        required
                                     />
                                 </div>
                                 <button
