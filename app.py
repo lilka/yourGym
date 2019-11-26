@@ -21,7 +21,7 @@ import yaml
 
 db = yaml.load(open('db.yaml'))
 
-app = Flask(__name__, static_folder='build')
+app = Flask(__name__, static_folder='build', static_url_path='')
 
 if 'CLEARDB_DATABASE_URL' in os.environ:
 
@@ -86,9 +86,6 @@ def login():
 
     email = request.get_json()['email']
     password = request.get_json()['password']
-    result = ""
-    print(str(password))
-    print(str(email))
 
 
     sql = "SELECT * FROM users where email = %s"
@@ -97,8 +94,7 @@ def login():
     cursor.execute(sql,data)
 
     rv = cursor.fetchone()
-    print(rv[6])
-    print(rv[0])
+
 
     if bcrypt.check_password_hash(rv[3], password):
         access_token = create_access_token(identity= {'id': rv[0], 'role': rv[6]})
@@ -266,6 +262,10 @@ def addWorkout():
     date = request.get_json()['date']
     trainer_id = request.get_json()['trainer_id']
     time = request.get_json()['time']
+
+    if( duration < 0 or limits <0 ):
+        return jsonify({'error': 'Czas trwania lub limit nie poprawny'})
+
 
 
 
