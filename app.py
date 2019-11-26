@@ -23,9 +23,9 @@ db = yaml.load(open('db.yaml'))
 
 app = Flask(__name__)
 
-if 'DATABASE_URL' in os.environ:
+if 'CLEARDB_DATABASE_URL' in os.environ:
 
-    url = urlparse.urlparse(os.environ['DATABASE_URL'])
+    url = urlparse.urlparse(os.environ['CLEARDB_DATABASE_URL'])
     app.config['MYSQL_DATABASE_HOST'] = url.hostname
     app.config['MYSQL_DATABASE_USER'] = url.username
     app.config['MYSQL_DATABASE_PASSWORD'] = url.password
