@@ -29,7 +29,7 @@ if 'CLEARDB_DATABASE_URL' in os.environ:
     app.config['MYSQL_DATABASE_HOST'] = url.hostname
     app.config['MYSQL_DATABASE_USER'] = url.username
     app.config['MYSQL_DATABASE_PASSWORD'] = url.password
-    app.config['MYSQL_DATABASE_DB'] = url.path
+    app.config['MYSQL_DATABASE_DB'] = url.path[1:]
 
 else:
     app.config['MYSQL_DATABASE_HOST'] = db['mysql_host']
