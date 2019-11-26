@@ -21,7 +21,7 @@ import yaml
 
 db = yaml.load(open('db.yaml'))
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='build')
 
 if 'CLEARDB_DATABASE_URL' in os.environ:
 
