@@ -40,39 +40,38 @@ class Login extends Component {
     handleUserInput = (e) => {
         const name = e.target.name;
         const value = e.target.value;
-        this.setState({[name]: value},
-            () => { this.validateField(name, value) });
+        this.setState({[name]: value})
     }
-    validateField(fieldName, value) {
-        let fieldValidationErrors = this.state.formErrors;
-        let emailValid = this.state.emailValid;
-        let passwordValid = this.state.passwordValid;
-
-        switch(fieldName) {
-            case 'email':
-                emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-                fieldValidationErrors.email = emailValid ? '' : ' is invalid';
-                break;
-            case 'password':
-                passwordValid = value.length >= 6;
-                fieldValidationErrors.password = passwordValid ? '': ' is too short';
-                break;
-            default:
-                break;
-        }
-        this.setState({formErrors: fieldValidationErrors,
-            emailValid: emailValid,
-            passwordValid: passwordValid
-        }, this.validateForm);
-    }
-
-    validateForm() {
-        this.setState({formValid: this.state.emailValid && this.state.passwordValid});
-    }
-
-    errorClass(error) {
-        return(error.length === 0 ? '' : 'has-error');
-    }
+    // validateField(fieldName, value) {
+    //     let fieldValidationErrors = this.state.formErrors;
+    //     let emailValid = this.state.emailValid;
+    //     let passwordValid = this.state.passwordValid;
+    //
+    //     switch(fieldName) {
+    //         case 'email':
+    //             emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+    //             fieldValidationErrors.email = emailValid ? '' : ' is invalid';
+    //             break;
+    //         case 'password':
+    //             passwordValid = value.length >= 6;
+    //             fieldValidationErrors.password = passwordValid ? '': ' is too short';
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    //     this.setState({formErrors: fieldValidationErrors,
+    //         emailValid: emailValid,
+    //         passwordValid: passwordValid
+    //     }, this.validateForm);
+    // }
+    //
+    // validateForm() {
+    //     this.setState({formValid: this.state.emailValid && this.state.passwordValid});
+    // }
+    //
+    // errorClass(error) {
+    //     return(error.length === 0 ? '' : 'has-error');
+    // }
 
 
     checkUser(){
@@ -124,10 +123,8 @@ class Login extends Component {
 
                         <form noValidate onSubmit={this.onSubmit}>
                             <h1 className="h3 mb-3 font-weight-normal">Zaloguj sie!</h1>
-                            <div className={"panel panel-default"}>
-                                <FormErrors formErrors={this.state.formErrors} />
-                            </div>
-                            <div className={`form-group  ${this.errorClass(this.state.formErrors.email)}`}>
+
+                            <div className={`form-group  `}>
                                 <label htmlFor="email">Adres email</label>
                                 <input
                                     type="email"
@@ -141,7 +138,7 @@ class Login extends Component {
                                 />
 
                             </div>
-                            <div className={`form-group ${this.errorClass(this.state.formErrors.password)}`}>
+                            <div className={`form-group`}>
                                 <label htmlFor="password">Haslo</label>
                                 <input
                                     type="password"
@@ -155,7 +152,7 @@ class Login extends Component {
                             <button
                                 type="submit"
                                 className="btn btn-lg btn-primary btn-block"
-                                disabled={!this.state.formValid}
+
                             >
                                 Zaloguj!
                             </button>
