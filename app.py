@@ -23,7 +23,7 @@ db = yaml.load(open('db.yaml'))
 
 app = Flask(__name__)
 
-if os.environ['DATABASE_URL']:
+if 'DATABASE_URL' in os.environ:
 
     url = urlparse.urlparse(os.environ['DATABASE_URL'])
     app.config['MYSQL_DATABASE_HOST'] = url.hostname
