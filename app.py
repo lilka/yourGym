@@ -47,8 +47,8 @@ jwt = JWTManager(app)
 
 CORS(app)
 
-@app.route('/<path:path>', methods = ['GET'])
-def home(path):
+@app.route('/', methods = ['GET'])
+def home():
     return app.send_static_file('index.html')
 
 @app.route('/users/register', methods = ['POST'])
