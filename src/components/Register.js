@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {register} from './UserFunction'
+import axios from "axios";
 
 class Register extends Component {
     constructor() {
@@ -9,8 +10,9 @@ class Register extends Component {
             last_name: '',
             password: '',
             email: '',
-            errors: {}
         }
+
+
 
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -30,9 +32,17 @@ class Register extends Component {
 
         }
 
-        register(newUser).then(res => {
-            this.props.history.push('/login')
-        })
+         axios
+             .post('users/register', {
+                    first_name: newUser.first_name,
+                    last_name: newUser.last_name,
+                    password: newUser.password,
+                    email: newUser.email
+             })
+
+             .then(res => {
+                 this.props.history.push('/login')
+             })
     }
     render() {
      return(

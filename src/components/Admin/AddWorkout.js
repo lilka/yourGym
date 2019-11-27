@@ -9,7 +9,7 @@ export default class AddWorkout extends Component {
         super(props);
 
         this.state = {
-
+            'error': false,
             'name': "",
             'duration': "",
             'limits': "",
@@ -17,14 +17,16 @@ export default class AddWorkout extends Component {
             'trainer': "",
             'time': "",
             trainers: [],
-            trainer_id : null
+            trainer_id : null,
+            errorMessage: ''
 
 
         };
 
-        this.onChange = this.onChange.bind(this)
-        this.onSubmit = this.onSubmit.bind(this)
-        this.handelTrainerChange = this.handelTrainerChange.bind(this)
+        this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.handelTrainerChange = this.handelTrainerChange.bind(this);
+        this.checkResponse = this.checkResponse.bind(this);
     }
 
     onChange(e){
@@ -48,11 +50,34 @@ export default class AddWorkout extends Component {
                 time: this.state.time,
             }
             console.log('submited workouts', workout)
-            addWorkout(workout).then(res => {
-                this.props.history.push('/admin/workouts')
-            })
+          axios
+              .post('/admin/add/workout', {
+                  name: workout.name,
+                  duration: workout.duration,
+                  limits: workout.limits,
+                  date: workout.date,
+                  trainer_id: workout.trainer,
+                  time: workout.time
+              })
+               .then(this.checkResponse)
+              .catch(err=>console.log(err))
+      }
+
+
+
+
+    checkResponse(response){
+        console.log(response)
+        if(response.data == 'error'){
+            console.log("ssdkjkjdskj");
+            this.setState({error: true});
+
+        }else{
+
+            this.props.history.push('/admin/workouts')
         }
 
+    }
     getTrainers = () => {
         axios
             .get('/trainers')
@@ -81,6 +106,7 @@ export default class AddWorkout extends Component {
                 <div className={"container"}>
                     <div className={"row"}>
                         <div className="col-md-6 mt-5 mx-auto">
+                            { this.state.error ?  <div className={"alert alert-danger"} role="alert">"Bledne dane"</div>   : " "}
                             <form noValidate onSubmit={this.onSubmit}>
                                 <h1 className={"h3 mb-3 font-weight-normal"}>Add workout </h1>
                                 <div className={"form-group"}>

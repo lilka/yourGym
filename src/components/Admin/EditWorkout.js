@@ -20,6 +20,8 @@ export default class EditWorkout extends Component {
             trainer_id:"",
             time: "",
             trainers: [],
+            error: false,
+            errorMessage: ''
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -106,9 +108,21 @@ export default class EditWorkout extends Component {
              method: 'put',
              url: `/admin/workout/update/${this.state.id}`,
              data: workout
-         }).then(response =>{
+         }).then(this.checkResponse)
+         .catch(err=>console.log(err))
+        }
+
+
+        checkResponse(response){
+         console.log(response)
+         if(response == 'error'){
+             this.setState({error: true, errorMessage: response.data})
+
+         }else{
+
              this.props.history.push('/admin/workouts')
-         }).catch(err=>console.log(err))
+         }
+
         }
 
     render() {
@@ -119,6 +133,7 @@ export default class EditWorkout extends Component {
             <div className={"container"}>
                 <div className={"row"}>
                     <div className="col-md-6 mt-5 mx-auto">
+                        { this.state.isError ?  <div className={"alert alert-danger"} role="alert">response.data</div>   : " "}
                         <form noValidate onSubmit={this.onSubmit}>
                             <h1 className={"h3 mb-3 font-weight-normal"}>Edytuj trening </h1>
                             <div className={"form-group"}>

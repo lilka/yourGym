@@ -265,8 +265,10 @@ def addWorkout():
     trainer_id = request.get_json()['trainer_id']
     time = request.get_json()['time']
 
-    if( duration < 0 or limits <0 ):
-        return jsonify({'error': 'Czas trwania lub limit nie poprawny'})
+    print()
+
+    if( int(duration)< 0 or int( limits) <0 ):
+        return 'error'
 
 
 
