@@ -16,17 +16,38 @@ import ViewUser from "./components/Admin/ViewUser";
 import WorkoutSchedule from "./components/Client/WorkoutSchedule";
 import AddTrainer from "./components/Admin/AddTrainer";
 import {UserLogin} from "./components/UserLogin";
+import CookieConsent, {Cookies} from "react-cookie-consent";
 
 class App extends Component {
- render(){
+
+
+    render(){
+
   return (
+
   <Router>
    <div className="App">
     <Navbar/>
-
+       <CookieConsent
+           location="bottom"
+           buttonText="Pewnie, że akceptuje!"
+           cookieName="myAwesomeCookieName2"
+           style={{ background: "#2B373B" }}
+           buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
+           expires={150}
+           onAccept={() => {alert("yay!")}}
+           enableDeclineButton
+           declineButtonText="Nie akceptuje"
+           onDecline={() => {alert("nay!")}}
+       >
+           Strona używa cookies.{" "}
+           <span style={{ fontSize: "10px" }}>
+    </span>
+       </CookieConsent>
 
        <Route exact path ='/' component ={Landing} />
         <div className = "container">
+
            <Route exact path ='/register' component ={Register} />
            <Route exact path ='/login' component ={Login} />
            <Route exact path ='/profile/:id' component ={UserProfile} />
