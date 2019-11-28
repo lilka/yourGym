@@ -5,6 +5,11 @@ import {Redirect} from "react-router-dom";
 
 import {Button} from 'reactstrap'
 import Link from "react-router-dom/Link";
+import jwt_decode from "jwt-decode";
+
+const JoinButton = ({color, onClick, name})  =>
+    <a className={`waves-effect waves-light btn-small ${color}`} onClick={onClick} >{name}</a>
+
 
 export default class WorkoutSchedule extends Component {
     constructor(props) {
@@ -12,52 +17,77 @@ export default class WorkoutSchedule extends Component {
 
         this.state = {
             workouts : [],
+            isError :false
+
+
         }
-        this.getWorkouts = this.getWorkouts.bind(this);
         this.signUpUser = this.signUpUser.bind(this);
+        this.getWorkouts = this.getWorkouts.bind(this);
 
     }
 
-    Row = ({name, duration, limits, date, trainer_first_name, trainer_last_name, id, time }) =>
+    Row = ({name, duration, limits, date, trainer_first_name, trainer_last_name, id, time, sign_up_users, is_sign_up}) =>
         <tr id ={id}>
             <td> {name}</td>
             <td> {duration}</td>
-            <td> {limits}</td>
+            <td>{limits-sign_up_users} / {limits}</td>
             <td> {date}</td>
             <td>{time}</td>
-            <td>{trainer_first_name } {trainer_last_name}</td>
+            <td>{trainer_first_name } {trainer_last_name} </td>
             <td>
-                <a class="waves-effect waves-light btn-small green" onClick={()=>this.signUpUser({id})}>Dołącz</a>
-                <a class="waves-effect waves-light btn-small red"  onClick={()=>this.signUpUser()}>Opusc</a>
+                <JoinButton color={is_sign_up === 0 ? 'green': 'red' }
+                            onClick={is_sign_up === 0 ? ()=>this.signUpUser({id, limits, sign_up_users}): ()=>this.signOutUser({id})}
+                            name = {is_sign_up === 1 ? "opusc" : "dolacz"} />
 
             </td>
         </tr>
 
-    signUpUser = (id) => {
-        const workout_id = id;
-        console.log(this.state.user_id)
+    signUpUser = ({id, limits, sign_up_users})=> {
+        const token = localStorage.usertoken;
+        const decoded = jwt_decode(token);
+        const user_id = decoded.identity.id;
+
         axios
             .post('/signup/class', {
-                user_id: this.state.user_id,
-                workout_id: workout_id,
+                user_id: user_id,
+                workout_id: id,
+                limits: limits,
+                sign_up_users: sign_up_users
 
             })
-            .then(response => {
-                console.log("SignUP")
+            .then(response=>{
+                const data = response.data
+                this.getError(data);
             })
+            .then(this.getWorkouts)
+
+
+
     }
 
 
-    signUpUser = (id) => {
-        const workout_id = id;
-        console.log(this.state.user_id)
+    getError =(response) =>{
+        console.log(response.error)
+        if(response.result === 'error'){
+            this.setState({isError:true} )
+        }
+    }
+
+    signOutUser = ({id}) => {
+
+        const token = localStorage.usertoken;
+        const decoded = jwt_decode(token);
+        const user_id = decoded.identity.id;
+
         axios
             .post('/signout/class', {
-                user_id: this.state.user_id,
+                user_id: user_id,
+                workout_id: id
 
             })
+            .then(this.getWorkouts)
             .then(response => {
-                console.log("SignUP")
+                console.log("SignOut")
             })
     }
 
@@ -66,8 +96,15 @@ export default class WorkoutSchedule extends Component {
 
 
     getWorkouts = () => {
+        const token = localStorage.usertoken;
+        const decoded = jwt_decode(token);
+        const user_id = decoded.identity.id;
+
         axios
-            .get('/admin/workouts')
+            .post('/user/workouts', {
+            user_id: user_id
+        })
+
             .then((response) => {
                 console.log("response", response);
                 const workouts = response.data;
@@ -88,6 +125,7 @@ export default class WorkoutSchedule extends Component {
     render() {
         return(
             <div>
+                { this.state.isError ?  <div className={"alert alert-danger"} role="alert">Brak miejsca na zajecia</div>   : " "}
                 <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20 }}>Grafik zajec</p>
                 <Table striped>
                     <thead>

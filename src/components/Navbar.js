@@ -72,7 +72,7 @@ class Landing extends Component {
                             <li><Link  link to={`/profile/${id}`}><i className="fa fa-calendar"></i> Profil</Link></li>
                         }
                         {this.setRole() ==='admin' ?  <li><Link to="/admin/users"><i className="fa fa-users"></i> Zarządzaj użytkownikami</Link></li>:
-                            <li><Link link to="/schedule"><i className="fa fa-users"></i> Grafik zajęć</Link></li>
+                            <li><Link link to={`/schedule`}><i className="fa fa-users"></i> Grafik zajęć</Link></li>
                         }
                         {this.setRole() === 'admin' ?  <li><Link to="/admin/addTrainer"><i className="fa fa-users"></i> Zarządzaj trenerami</Link></li>:  <li><Link to="/about"><i className="fa fa-question-circle"></i> Informacje </Link></li>}
 

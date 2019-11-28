@@ -7,15 +7,7 @@ import {Button} from 'reactstrap';
 const Toggle = ({className, onClick, icon })  =>
      <a className={`btn-floating btn-small waves-effect waves-light  ${className}`} onClick={onClick} ><i className="material-icons">{icon}</i></a>
 
-const Row = ({first_name, last_name, user_id, present}) =>
-    <tr id={user_id}>
-        <td> {first_name}</td>
-        <td> {last_name}</td>
-        <td>
-            <Toggle className={`green ${present === 1 ? 'disabled' : ''}`} onClick={()=>this.userIsPresent({user_id, })} icon={"add"} />
-            <Toggle  className={`red ${present === 0 ? 'disabled' : ''}`} onClick={()=>this.userIsAbsent({user_id, })} icon={"remove"} />
-        </td>
-    </tr>
+
 
 
 
@@ -32,6 +24,7 @@ export default class WorkoutDetails extends Component {
             limits:"",
             trainer_first_name:"",
             trainer_last_name:"",
+            sign_up_users: "",
             time:"",
             duration:"",
             date:"",
@@ -50,6 +43,7 @@ export default class WorkoutDetails extends Component {
         this.setState({user_id : e.target.value});
     }
 
+
     userIsPresent = ({user_id}) => {
         const workout_id = this.props.match.params.id;
         axios
@@ -57,6 +51,7 @@ export default class WorkoutDetails extends Component {
                 user_id: user_id,
                 workout_id: workout_id,
                 present: true
+
             })
             .then(this.getEnrolledUsers)
             .then(response => {
@@ -78,6 +73,15 @@ export default class WorkoutDetails extends Component {
                 console.log("Present")
             })
     }
+    Row = ({first_name, last_name, user_id, persent}) =>
+        <tr id={user_id}>
+            <td> {first_name}</td>
+            <td> {last_name} </td>
+            <td>
+                <Toggle className={`green ${persent === 1 ? 'disabled' : ''}`} onClick={()=>this.userIsPresent({user_id})} icon={"add"} />
+                <Toggle  className={`red ${persent === 0 ? 'disabled' : ''}`} onClick={()=>this.userIsAbsent({user_id})} icon={"remove"} />
+            </td>
+        </tr>
 
     signUpUser = () => {
         const workout_id = this.props.match.params.id;
@@ -86,6 +90,9 @@ export default class WorkoutDetails extends Component {
             .post('/signup/class', {
                 user_id: this.state.user_id,
                 workout_id: workout_id,
+                limits: this.state.limits,
+                sign_up_users: this.state.sign_up_users
+
 
             })
             .then(this.getEnrolledUsers)
@@ -103,6 +110,7 @@ export default class WorkoutDetails extends Component {
             .then((response) => {
                 const enrolled_user = response.data;
                 this.setState({enrolled_user: enrolled_user});
+                console.log(enrolled_user)
 
             })
             .catch (error => {
@@ -138,7 +146,8 @@ export default class WorkoutDetails extends Component {
                     trainer_first_name:workout[0].trainer_first_name,
                     trainer_last_name:workout[0].trainer_last_name,
                     trainer_id: workout[0].trainer_id,
-                    time: workout[0].time
+                    time: workout[0].time,
+                    sign_up_users: workout[0].sign_up_users
                 });
             })
 
@@ -162,7 +171,7 @@ export default class WorkoutDetails extends Component {
                     <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20 }}>{this.state.name}</p>
                     <ul className={"collection"}>
                         <li className={"collection-item"} style={{textAlign: "left"}}><strong>{this.state.date} at {this.state.time}</strong></li>
-                        <li className={"collection-item"} style={{textAlign: "left"}}>Trener:{this.state.trainer_first_name} {this.state.trainer_last_name}  Limit miejsc: {this.state.limits}</li>
+                        <li className={"collection-item"} style={{textAlign: "left"}}>Trener:{this.state.trainer_first_name} {this.state.trainer_last_name}  Limit miejsc: {this.state.limits - this.state.sign_up_users} / {this.state.limits}</li>
                     </ul>
                 </div>
                 <div>
@@ -177,7 +186,7 @@ export default class WorkoutDetails extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {this.state.enrolled_user.map(Row)}
+                    {this.state.enrolled_user.map(this.Row)}
                     </tbody>
                 </Table>
 

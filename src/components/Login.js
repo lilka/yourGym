@@ -5,6 +5,8 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import {FormErrors} from "./FormErrors";
 import styled from 'styled-components';
+import cookie from 'react-cookies'
+
 
 
 
@@ -75,7 +77,8 @@ class Login extends Component {
 
 
     checkUser(){
-        const token = localStorage.usertoken
+
+        const token = localStorage.getItem('usertoken')
         const decoded = jwt_decode(token);
         const {id, role} = decoded.identity;
         if (role == 'admin') {

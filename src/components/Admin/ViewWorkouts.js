@@ -18,11 +18,11 @@ export default class ViewWorkouts extends Component {
 
     }
 
-    Row = ({name, duration, limits, date, trainer_first_name, trainer_last_name, id, time }) =>
+    Row = ({name, duration, limits, date, trainer_first_name, trainer_last_name, id, time, sign_up_users}) =>
         <tr id ={id}>
             <td> {name}</td>
             <td> {duration}</td>
-            <td> {limits}</td>
+            <td> {limits-sign_up_users} / {limits}</td>
             <td> {date}</td>
             <td>{time}</td>
             <td>{trainer_first_name } {trainer_last_name}</td>

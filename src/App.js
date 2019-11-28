@@ -17,8 +17,15 @@ import WorkoutSchedule from "./components/Client/WorkoutSchedule";
 import AddTrainer from "./components/Admin/AddTrainer";
 import {UserLogin} from "./components/UserLogin";
 import CookieConsent, {Cookies} from "react-cookie-consent";
+import AddUser from "./components/Admin/AddUser";
+import EditUser from "./components/Admin/EditUser";
+import { instanceOf } from 'prop-types';
+import { withCookies } from 'react-cookie';
 
 class App extends Component {
+
+
+
 
 
     render(){
@@ -34,11 +41,14 @@ class App extends Component {
            cookieName="myAwesomeCookieName2"
            style={{ background: "#2B373B" }}
            buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
+           acceptOnScroll={true}
+           acceptOnScrollPercentage={50}
            expires={150}
            onAccept={() => {alert("yay!")}}
            enableDeclineButton
            declineButtonText="Nie akceptuje"
-           onDecline={() => {alert("nay!")}}
+           onDecline={() => {alert("nay!")
+           }}
        >
            Strona używa cookies.{" "}
            <span style={{ fontSize: "10px" }}>
@@ -60,10 +70,12 @@ class App extends Component {
            <Route exact path ='/admin/addTrainer' component ={AddTrainer}/>
            <Route exact path = '/admin/users' component = {ViewUser}/>
            <Route exact path ='/schedule' component ={WorkoutSchedule}/>
+           <Route exact path ='/admin/add/user' component ={AddUser}/>
+           <Route exact path ='/admin/user/edit/:id' component ={EditUser}/>
         </div>
      </div>
    </Router>
   );
 }
 }
-export default App;
+export default withCookies(App);
