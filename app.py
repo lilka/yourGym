@@ -81,6 +81,68 @@ def register():
 
     return jsonify({'result': result})
 
+@app.route('/admin/add/user', methods = ['POST'])
+def addUser():
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    first_name = request.get_json()['first_name']
+    last_name = request.get_json()['last_name']
+    email = request.get_json()['email']
+    start_date = request.get_json()['start_date']
+    pass_type_id = request.get_json()['pass_type_id']
+    role = request.get_json()['role']
+
+
+    password = bcrypt.generate_password_hash(request.get_json()['password']).decode('utf-8')
+
+    created = datetime.utcnow()
+
+    sql = "INSERT INTO users (first_name, created, last_name, password, email, role) VALUES (%s,%s,%s,%s,%s,%s)"
+
+    data = (first_name, created, last_name, password, email, role)
+    cursor.execute(sql, data)
+    con.commit()
+
+
+    date_time_obj = datetime.strptime(start_date, '%Y-%m-%d')
+
+
+    print(datetime.now())
+    print(date_time_obj)
+
+
+    if date_time_obj <= datetime.now():
+        active = 1
+    else:
+        active = 0
+
+    date_time_obj.strftime('%Y-%m-%d  %H:%M:%S')
+    print(date_time_obj)
+    sql = "SELECT id FROM users WHERE email = %s"
+    data = (email)
+    cursor.execute(sql, data)
+
+
+    rv = cursor.fetchone()
+    user_id = rv[0]
+    print(user_id)
+    print(pass_type_id)
+    print(active)
+
+    sql = "INSERT INTO pass (type_id, active, user_id, start_date) VALUES (%s,%s,%s,%s)"
+    data = (pass_type_id, active, user_id, date_time_obj)
+    cursor.execute(sql, data)
+    con.commit()
+    result = {
+        'done':'done'
+    }
+
+    return jsonify({'result': result})
+
+
+
+
 @app.route('/users/login', methods = ['POST'])
 def login():
     con = mysql.connect()
@@ -171,6 +233,23 @@ def getTrainers():
     print(json.dumps(json_data))
     return json.dumps(json_data)
 
+
+@app.route('/passTypes', methods = ['GET'])
+def getPassTypes():
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    cursor.execute("SELECT * FROM pass_type;")
+
+    #extract row headers for json
+    row_headers = [x[0] for x in cursor.description]
+    rv = cursor.fetchall()
+    json_data = []
+    for result in rv:
+        json_data.append(dict(zip(row_headers, result)))
+    print(json.dumps(json_data))
+    return json.dumps(json_data)
+
 @app.route('/users', methods = ['GET'])
 def getUsers():
     con = mysql.connect()
@@ -189,18 +268,108 @@ def getUsers():
     print(json.dumps(json_data))
     return json.dumps(json_data)
 
-
-
-
-@app.route('/admin/workouts', methods = ['GET'])
-def showWorkouts():
+@app.route('/user/<int:id>', methods = ['GET'])
+def getUser(id):
     con = mysql.connect()
     cursor = con.cursor()
 
-    cursor.execute("SELECT g.id, g.name, g.duration,"
-                   " g.limits, DATE_FORMAT(g.date,'%Y-%m-%d') as date, g.time, t.first_name as trainer_first_name,"
-                   " t.last_name as trainer_last_name FROM workout as g"
-                   "  JOIN trainer as t ON g.trainer_id = t.id ORDER BY g.date;")
+    sql = "SELECT u.first_name, u.last_name, u.email, u.id from users as u  where u.id=%s;"
+    cursor.execute(sql, id)
+    con.commit()
+
+
+
+    #extract row headers for json
+    row_headers = [x[0] for x in cursor.description]
+    rv = cursor.fetchall()
+    json_data = []
+    for result in rv:
+        json_data.append(dict(zip(row_headers, result)))
+    print(json.dumps(json_data))
+    return json.dumps(json_data)
+
+
+@app.route('/admin/user/delete' , methods = ['POST'])
+def deleteUser():
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    id = request.get_json()["id"]
+    print(id)
+
+    sql = "DELETE FROM users where id = %s"
+    cursor.execute(sql, id)
+    con.commit()
+    result = "user deleted"
+
+    return jsonify({'result': result})
+
+
+@app.route('/admin/user/update/<int:id>', methods=['PUT'])
+def updateUser(id):
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    first_name = request.get_json()['first_name']
+    last_name = request.get_json()['last_name']
+    email = request.get_json()['email']
+
+
+
+
+
+    sql = "UPDATE  users SET first_name = %s, last_name = %s, " \
+          "email = %s WHERE id = %s"
+    data = (first_name, last_name, email, id)
+
+    cursor.execute(sql, data)
+    con.commit()
+
+    result = {
+       'done': 'done'
+
+ }
+    return jsonify({'result': result})
+
+
+@app.route('/admin/workouts', methods = ['POST', 'GET'])
+def showWorkouts():
+
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    cursor.execute("SELECT g.id, g.name, g.duration,g.limits,"
+                   "DATE_FORMAT(g.date,'%Y-%m-%d') as date, g.time, t.first_name as trainer_first_name,"
+                   "(SELECT count(uw.user_id) FROM users_workouts as uw WHERE uw.wourkout_id = g.id) as sign_up_users, t.last_name as trainer_last_name FROM workout as g JOIN trainer as t ON g.trainer_id = t.id ORDER BY g.date;")
+
+    #extract row headers for json
+    row_headers = [x[0] for x in cursor.description]
+    rv = cursor.fetchall()
+    json_data = []
+    for result in rv:
+        json_data.append(dict(zip(row_headers, result)))
+    print(json.dumps(json_data))
+    return json.dumps(json_data)
+
+
+
+@app.route('/user/workouts', methods = ['POST'])
+def showUserWorkouts():
+    user_id = request.get_json()['user_id']
+    print(user_id)
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    sql ="SELECT g.id, g.name, g.duration,g.limits," \
+         "DATE_FORMAT(g.date,'%Y-%m-%d') as date, g.time, t.first_name as trainer_first_name," \
+         "(SELECT count(uw.user_id) FROM users_workouts as uw WHERE uw.wourkout_id = g.id) as sign_up_users," \
+         "(SELECT count(uw.user_id) FROM users_workouts as uw WHERE uw.wourkout_id = g.id and uw.user_id ="+str(user_id) +") as is_sign_up," \
+         " t.last_name as trainer_last_name FROM workout as g JOIN trainer as t ON g.trainer_id = t.id ORDER BY g.date;"
+
+    data = (user_id)
+    print(data)
+
+    cursor.execute(sql)
 
     #extract row headers for json
     row_headers = [x[0] for x in cursor.description]
@@ -265,12 +434,10 @@ def addWorkout():
     trainer_id = request.get_json()['trainer_id']
     time = request.get_json()['time']
 
-    print()
+
 
     if( int(duration)< 0 or int( limits) <0 ):
         return 'error'
-
-
 
 
 
@@ -297,7 +464,7 @@ def getWorkoutDetails(id):
     cursor = con.cursor()
 
     cursor.execute( "SELECT g.id, g.name, g.duration," \
-          " g.limits, DATE_FORMAT(g.date,'%Y-%m-%d') as date, g.time, t.first_name as trainer_first_name," \
+          " g.limits, DATE_FORMAT(g.date,'%Y-%m-%d') as date, g.time, (SELECT count(uw.user_id) FROM users_workouts as uw WHERE uw.wourkout_id = g.id) as sign_up_users, t.first_name as trainer_first_name," \
           "t.last_name as trainer_last_name, t.id as trainer_id FROM workout as g" \
           " JOIN trainer as t ON g.trainer_id = t.id WHERE g.id = "+str(id)+";")
 
@@ -342,10 +509,6 @@ def markAttendance():
     user_id = request.get_json()['user_id']
     workout_id = request.get_json()['workout_id']
     present = request.get_json()['present']
-
-    print(user_id)
-    print(workout_id)
-    print(present)
 
 
 
@@ -414,27 +577,41 @@ def signUpUser():
 
     user_id = request.get_json()['user_id']
     workout_id = request.get_json()['workout_id']
+    limits = request.get_json()['limits']
+    enrolled_users = request.get_json()['sign_up_users']
 
 
-    cursor.execute("INSERT INTO users_workouts (user_id, wourkout_id) VALUES ('" +
-                     str(user_id) + "','" +str(workout_id) + "')")
-    con.commit()
-    result = {
-        'user_id': user_id,
-        'workout_id': workout_id,
 
-    }
+    if (int(limits)-int(enrolled_users)) <0:
+        return 'error'
+    else:
 
-    return jsonify({'result': result})
+        sql= "INSERT INTO users_workouts (user_id, wourkout_id) VALUES (%s,%s)"
+        data = (user_id, workout_id)
+
+        cursor.execute(sql,data)
+        con.commit()
+        result = {
+            'user_id': user_id,
+            'workout_id': workout_id
+
+        }
+
+        return jsonify({'result': result})
+
 @app.route('/signout/class', methods = ['POST'])
 def signOutFromWorkout():
     con = mysql.connect()
     cursor = con.cursor()
 
     user_id = request.get_json()['user_id']
+    workout_id = request.get_json()['workout_id']
 
-    sql="DELETE FROM users_workouts WHERE user_id = %s"
-    data = (user_id)
+    print(user_id)
+    print(workout_id)
+
+    sql="DELETE FROM users_workouts WHERE user_id = %s AND wourkout_id = %s"
+    data = (user_id, workout_id)
 
 
 
@@ -442,6 +619,7 @@ def signOutFromWorkout():
     con.commit()
     result = {
         'user_id': user_id,
+        'workout_id': workout_id
 
     }
 
