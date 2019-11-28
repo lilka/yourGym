@@ -583,7 +583,7 @@ def signUpUser():
 
 
     if (int(limits)-int(enrolled_users)) <0:
-        return 'error'
+        return jsonify({'result': 'error'})
     else:
 
         sql= "INSERT INTO users_workouts (user_id, wourkout_id) VALUES (%s,%s)"
