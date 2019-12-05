@@ -1,5 +1,5 @@
 import os
-
+import random
 
 from flask import Flask, render_template, request, json, jsonify
 from flaskext.mysql import MySQL
@@ -187,6 +187,50 @@ def get_user_profile(id):
     print(json.dumps(json_data))
     return json.dumps(json_data)
 
+@app.route('/admin/last_users', methods = ['GET'])
+def get_last_registred_users():
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    sql = "SELECT first_name, last_name, id, created FROM users WHERE role!= 'admin' ORDER BY created LIMIT 10 ; "
+
+    cursor.execute(sql)
+
+    row_headers = [x[0] for x in cursor.description]
+    rv = cursor.fetchall()
+    json_data = []
+    for result in rv:
+        json_data.append(dict(zip(row_headers, result)))
+    print(json.dumps(json_data))
+    return json.dumps(json_data)
+
+@app.route('/admin/staticstic', methods = ['GET'])
+def get_statistics():
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    sql = "SELECT g.name as name, (SELECT count(uw.user_id) FROM users_workouts as uw" \
+          " WHERE uw.wourkout_id = g.id) as value FROM workout as g " \
+          "WHERE  g.date > DATE_ADD(now(), INTERVAL -30 DAY); "
+
+    cursor.execute(sql)
+
+    row_headers = [x[0] for x in cursor.description]
+    row_headers.append('color')
+    print(row_headers)
+    rv = cursor.fetchall()
+    json_data = []
+    for result in rv:
+        l = list(result)
+        r = lambda: random.randint(0,255)
+        color =('#%02X%02X%02X' % (r(),r(),r()))
+        l.append(color)
+        tuple(l)
+        print(l)
+        json_data.append(dict(zip(row_headers, l)))
+        print(json_data)
+    print(json.dumps(json_data))
+    return json.dumps(json_data)
 
 
 @app.route('/admin/login', methods = ['POST'])
@@ -350,6 +394,8 @@ def showWorkouts():
         json_data.append(dict(zip(row_headers, result)))
     print(json.dumps(json_data))
     return json.dumps(json_data)
+
+
 
 
 
@@ -648,6 +694,7 @@ def saveToExcel():
     pandas.read_json(json.dumps(json_data)).to_excel(str(date.today())+'.xlsx', index=False)
 
     return jsonify({'result': json_data})
+
 
 
 
