@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Link, withRouter} from 'react-router-dom'
 import logo from '../img/yourGym.png'
 import jwt_decode from "jwt-decode";
+import CookieConsent from "react-cookie-consent";
 
 class Landing extends Component {
     constructor(props) {
@@ -55,8 +56,11 @@ class Landing extends Component {
                     </a>
 
                     <ul className="right hide-on-small-only">
+
                         <a className=" waves-effect waves-light btn-small" onClick = {()=>{if (window.confirm('Napewno chcesz sie wylogowac?')) this.logOut()}} >Wyloguj sie</a>
-                        <li><Link to="/"><i className="fa fa-home"></i> Home</Link></li>
+
+                            {this.setRole() ==='admin' ?  <li><Link to="/admin"><i className="fa fa-home"></i> Home</Link></li> :
+                            <li><Link to="/"><i className="fa fa-home"></i> Home</Link></li> }
                     </ul>
                     <ul className="side-nav" id="main-menu">
                         <ul id="slide-out" className="sidenav"  >
@@ -100,6 +104,9 @@ class Landing extends Component {
                         </ul>
                         <ul className="right hide-on-small-only">
                             <li><Link to="/"><i className="fa fa-home"></i> Home</Link></li>
+                        </ul>
+                        <ul>
+                            <li> <Link  to ="/rodo"> Polityka cookies</Link></li>
                         </ul>
                     </div>
                 </nav>

@@ -11,6 +11,7 @@ const JoinButton = ({color, onClick, name})  =>
     <a className={`waves-effect waves-light btn-small ${color}`} onClick={onClick} >{name}</a>
 
 
+
 export default class WorkoutSchedule extends Component {
     constructor(props) {
         super(props)
@@ -25,22 +26,6 @@ export default class WorkoutSchedule extends Component {
         this.getWorkouts = this.getWorkouts.bind(this);
 
     }
-
-    Row = ({name, duration, limits, date, trainer_first_name, trainer_last_name, id, time, sign_up_users, is_sign_up}) =>
-        <tr id ={id}>
-            <td> {name}</td>
-            <td> {duration}</td>
-            <td>{limits-sign_up_users} / {limits}</td>
-            <td> {date}</td>
-            <td>{time}</td>
-            <td>{trainer_first_name } {trainer_last_name} </td>
-            <td>
-                <JoinButton color={is_sign_up === 0 ? 'green': 'red' }
-                            onClick={is_sign_up === 0 ? ()=>this.signUpUser({id, limits, sign_up_users}): ()=>this.signOutUser({id})}
-                            name = {is_sign_up === 1 ? "opusc" : "dolacz"} />
-
-            </td>
-        </tr>
 
     signUpUser = ({id, limits, sign_up_users})=> {
         const token = localStorage.usertoken;
@@ -60,11 +45,11 @@ export default class WorkoutSchedule extends Component {
                 this.getError(data);
             })
             .then(this.getWorkouts)
+            .then(alert("Dokonano zapisu na zajęcia"))
 
 
 
     }
-
 
     getError =(response) =>{
         console.log(response.error)
@@ -91,9 +76,21 @@ export default class WorkoutSchedule extends Component {
             })
     }
 
+    Row = ({name, duration, limits, date, trainer_first_name, trainer_last_name, id, time, sign_up_users, is_sign_up}) =>
+        <tr id ={id}>
+            <td> {name}</td>
+            <td> {duration}</td>
+            <td>{limits-sign_up_users} / {limits}</td>
+            <td> {date}</td>
+            <td>{time}</td>
+            <td>{trainer_first_name } {trainer_last_name} </td>
+            <td>
+                <JoinButton color={is_sign_up === 0 ? 'green': 'red' }
+                            onClick={is_sign_up === 0 ? ()=>this.signUpUser({id, limits, sign_up_users}): ()=> {if (window.confirm('Jesteś pewny, ze chcesz się wypisać z treningu?')) this.signOutUser({id})}}
+                            name = {is_sign_up === 1 ? "opuść" : "dołącz"} />
 
-
-
+            </td>
+        </tr>
 
     getWorkouts = () => {
         const token = localStorage.usertoken;
@@ -118,7 +115,6 @@ export default class WorkoutSchedule extends Component {
             });
     }
 
-
     componentDidMount() {
         this.getWorkouts()
     }
@@ -126,7 +122,7 @@ export default class WorkoutSchedule extends Component {
         return(
             <div>
                 { this.state.isError ?  <div className={"alert alert-danger"} role="alert">Brak miejsca na zajecia</div>   : " "}
-                <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20 }}>Grafik zajec</p>
+                <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20 }}>Grafik zajęć</p>
                 <Table striped>
                     <thead>
                     <tr>

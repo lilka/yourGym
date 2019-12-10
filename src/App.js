@@ -21,6 +21,7 @@ import AddUser from "./components/Admin/AddUser";
 import EditUser from "./components/Admin/EditUser";
 import { instanceOf } from 'prop-types';
 import { withCookies } from 'react-cookie';
+import RODOCookis from "./components/Client/RODOCookis";
 
 class App extends Component {
 
@@ -48,9 +49,11 @@ class App extends Component {
            enableDeclineButton
            declineButtonText="Nie akceptuje"
            onDecline={() => {alert("nay!")
+
            }}
        >
            Strona używa cookies.{" "}
+
            <span style={{ fontSize: "10px" }}>
     </span>
        </CookieConsent>
@@ -72,6 +75,7 @@ class App extends Component {
            <Route exact path ='/schedule' component ={WorkoutSchedule}/>
            <Route exact path ='/admin/add/user' component ={AddUser}/>
            <Route exact path ='/admin/user/edit/:id' component ={EditUser}/>
+           <Route exact path ='/rodo' component = {RODOCookis}/>
         </div>
      </div>
    </Router>

@@ -29,6 +29,7 @@ export default class WorkoutDetails extends Component {
             duration:"",
             date:"",
             trainer_id:"",
+            isError:false
 
 
         }
@@ -59,6 +60,13 @@ export default class WorkoutDetails extends Component {
             })
     }
 
+    checkResponse(response) {
+        console.log(response);
+        if (response.data === 'error') {
+            this.setState({error: true})
+        }
+    }
+
     userIsAbsent = ({user_id}) => {
         let workout_id = this.props.match.params.id;
         console.log({user_id})
@@ -70,7 +78,7 @@ export default class WorkoutDetails extends Component {
             })
             .then(this.getEnrolledUsers)
             .then(response => {
-                console.log("Present")
+                
             })
     }
     Row = ({first_name, last_name, user_id, persent}) =>
@@ -95,10 +103,11 @@ export default class WorkoutDetails extends Component {
 
 
             })
+            .then(this.checkResponse)
             .then(this.getEnrolledUsers)
-            .then(response => {
-                console.log("SignUP")
-            })
+            .catch(err=> this.setState({isError: true}))
+
+
     }
 
 
@@ -114,7 +123,7 @@ export default class WorkoutDetails extends Component {
 
             })
             .catch (error => {
-                console.log(error)
+
             });
     }
 
@@ -128,7 +137,7 @@ export default class WorkoutDetails extends Component {
 
             })
             .catch(error => {
-                console.log(error)
+
             });
     }
 
@@ -151,7 +160,7 @@ export default class WorkoutDetails extends Component {
                 });
             })
 
-            .catch(error => {console.log(error)});
+            .catch(error => {});
     }
 
 
@@ -167,6 +176,7 @@ export default class WorkoutDetails extends Component {
 
         return(
             <div>
+                { this.state.isError ?  <div className={"alert alert-danger"} role="alert">Brak miejsc</div>   : " "}
                 <div>
                     <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20 }}>{this.state.name}</p>
                     <ul className={"collection"}>
@@ -180,9 +190,9 @@ export default class WorkoutDetails extends Component {
                 <Table striped size="sm" responsive="xl" hover={true} >
                     <thead>
                     <tr>
-                        <th>Imie</th>
+                        <th>Imię</th>
                         <th>Nazwisko</th>
-                        <th>Zaznacz obecnosc</th>
+                        <th>Zaznacz obecność</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -192,15 +202,15 @@ export default class WorkoutDetails extends Component {
 
                 </div>
                 <div >
-                    <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20}}>Wybiez uzytkownika, aby go zapisac </p>
+                    <p style={{textAlign: "left", fontSize: 50, color:"#37A6E0", marginTop:20}}>Wybierz użytkownika, aby go zapisać </p>
                     <select
                         className={"form-control"}
                         value = {this.state.user_id}
                         onChange = {this.handelUserChange}
                         style={{width:"300px"}}>
-                        <option>Wybierz uzytkownika </option>
+                        <option>Wybierz użytkownika </option>
                         {this.state.all_users.map(optionItems)} </select>
-                     <Button onClick={()=>this.signUpUser()}>Zapisz</Button>
+                     <Button onClick={()=>this.signUpUser()} disabled={this.state.isError ? true : false}>Zapisz</Button>
                  </div>
             </div>
         );

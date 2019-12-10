@@ -69,7 +69,7 @@ export default class AddWorkout extends Component {
     checkResponse(response){
         console.log(response)
         if(response.data == 'error'){
-            console.log("ssdkjkjdskj");
+
             this.setState({error: true});
 
         }else{
@@ -106,16 +106,16 @@ export default class AddWorkout extends Component {
                 <div className={"container"}>
                     <div className={"row"}>
                         <div className="col-md-6 mt-5 mx-auto">
-                            { this.state.error ?  <div className={"alert alert-danger"} role="alert">"Bledne dane"</div>   : " "}
+                            { this.state.error ?  <div className={"alert alert-danger"} role="alert">"Błędne dane"</div>   : " "}
                             <form noValidate onSubmit={this.onSubmit}>
-                                <h1 className={"h3 mb-3 font-weight-normal"}>Add workout </h1>
+                                <h1 className={"h3 mb-3 font-weight-normal"}>Dodaj trening </h1>
                                 <div className={"form-group"}>
                                     <label htmlFor={"name"}> Nazwa </label>
                                     <input
                                         type={"text"}
                                         className={"form-control"}
                                         name={"name"}
-                                        placeholder={"podaj nazwe treningu"}
+                                        placeholder={"Podaj nazwę treningu"}
                                         value= {name}
                                         onChange={this.onChange}
                                         required
@@ -127,7 +127,7 @@ export default class AddWorkout extends Component {
                                         type={"number"}
                                         className={"form-control"}
                                         name={"duration"}
-                                        placeholder={"podaj czas trwania treningu"}
+                                        placeholder={"Podaj czas trwania treningu"}
                                         value={duration}
                                         onChange={this.onChange}
                                         required
@@ -139,7 +139,7 @@ export default class AddWorkout extends Component {
                                         type={"number"}
                                         className={"form-control"}
                                         name={"limits"}
-                                        placeholder={"wprowadz limit miejsc"}
+                                        placeholder={"Wprowadź limit miejsc"}
                                         value={limits}
                                         onChange={this.onChange}
                                         required
@@ -162,7 +162,7 @@ export default class AddWorkout extends Component {
                                         type={"date"}
                                         className={"form-control"}
                                         name={"date"}
-                                        placeholder={"Podaj date"}
+                                        placeholder={"Podaj datę"}
                                         value={date}
                                         onChange={this.onChange}
                                         required

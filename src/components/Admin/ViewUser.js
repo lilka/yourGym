@@ -18,12 +18,9 @@ export default class ViewWorkouts extends Component {
         axios
             .get('/users')
             .then((response) => {
-                console.log("response", response);
                 const all_users = response.data;
-                console.log("response", response)
-                console.log("trainers", all_users);
                 this.setState({users: all_users});
-                console.log("state", this.state)
+
 
             })
             .catch(error => {
@@ -51,7 +48,7 @@ export default class ViewWorkouts extends Component {
         axios
             .post('/admin/user/delete' ,{"id": id})
             .then(this.getAllUsers)
-            .then(console.log("Deleted"))
+
 
 
 
@@ -85,10 +82,10 @@ export default class ViewWorkouts extends Component {
                 <Table striped size="sm" responsive="md">
                     <thead>
                     <tr>
-                        <th>Imie</th>
+                        <th>Imię</th>
                         <th>Nazwisko</th>
                         <th>Typ karnetu</th>
-                        <th>Data rozpoczecia</th>
+                        <th>Data rozpoczęcia</th>
                         <th>Status karnetu</th>
                         <th>Akcje</th>
                     </tr>

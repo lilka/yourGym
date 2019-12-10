@@ -17,7 +17,7 @@ export const PassSelection =({onChange, pass_type_id, mapping}) =>
 
 export const ActivationDate =({start_date, onChange}) =>
      <div className={"form-group"}>
-         <label htmlFor={"start_date"}>Data rozpoczecia karnetu</label>
+         <label htmlFor={"start_date"}>Data rozpoczęcia karnetu</label>
          <input
              type={"datetime"}
              className={"form-control"}
@@ -104,7 +104,6 @@ export default class AddUser extends Component {
     checkResponse(response){
         console.log(response)
         if(response.data == 'error'){
-            console.log("ssdkjkjdskj");
             this.setState({error: true});
 
         }else{
@@ -118,7 +117,6 @@ export default class AddUser extends Component {
             .get('/passTypes')
             .then((response) => {
                 const pass_types = response.data;
-                console.log(response)
                 this.setState({pass_types: pass_types});
             })
             .catch (error => {
@@ -141,7 +139,7 @@ export default class AddUser extends Component {
             <div className={"container"}>
                 <div className={"row"}>
                     <div className="col-md-6 mt-5 mx-auto">
-                        { this.state.error ?  <div className={"alert alert-danger"} role="alert">"Bledne dane"</div>   : " "}
+                        { this.state.error ?  <div className={"alert alert-danger"} role="alert">"Błędne dane"</div>   : " "}
                         <form noValidate onSubmit={this.onSubmit}>
                             <h1 className={"h3 mb-3 font-weight-normal"}>Dodaj użytkownika </h1>
                             <div className={"form-group"}>
@@ -150,7 +148,7 @@ export default class AddUser extends Component {
                                     type={"text"}
                                     className={"form-control"}
                                     name={"first_name"}
-                                    placeholder={"Podaj imie"}
+                                    placeholder={"Podaj imię"}
                                     value= {first_name}
                                     onChange={this.onChange}
                                     required={"required"}
@@ -174,18 +172,18 @@ export default class AddUser extends Component {
                                     type={"email"}
                                     className={"form-control"}
                                     name={"email"}
-                                    placeholder={"wprowadz email"}
+                                    placeholder={"Podaj email"}
                                     value={email}
                                     onChange={this.onChange}
                                     required={"required"}
                                 />
                                 <div className={"form-group"}>
-                                    <label htmlFor={"password"}>Ustaw haslo uzytkownikowi</label>
+                                    <label htmlFor={"password"}>Ustaw hasło użytkownikowi</label>
                                     <input
                                         type={"password"}
                                         className={"form-control"}
                                         name={"password"}
-                                        placeholder={"Ustwa haslo"}
+                                        placeholder={"Ustwa hasło"}
                                         value={password}
                                         onChange={this.onChange}
                                         required={"required"}
@@ -208,7 +206,7 @@ export default class AddUser extends Component {
                             <button
                                 type={"submit"}
                                 className={"btn btn-primary"}>
-                                Dodaj uzytkownika
+                                Dodaj użytkownika
                             </button>
                         </form>
                     </div>

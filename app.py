@@ -1,7 +1,7 @@
 import os
 import random
 
-from flask import Flask, render_template, request, json, jsonify
+from flask import Flask, render_template, request, json, jsonify, send_from_directory
 from flaskext.mysql import MySQL
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -9,6 +9,7 @@ from flask_jwt_extended import JWTManager, create_access_token
 from datetime import datetime, date
 import pandas
 from urllib.parse import urlparse
+from flask import send_file
 
 
 
@@ -158,6 +159,8 @@ def login():
     cursor.execute(sql,data)
 
     rv = cursor.fetchone()
+    print(rv)
+
 
 
     if bcrypt.check_password_hash(rv[3], password):
@@ -446,25 +449,25 @@ def workoutDetails(id):
     print(json.dumps(json_data))
     return json.dumps(json_data)
 
-# @app.route('/admin/workout/details/<int:id>', methods = ['GET'])
-# def workoutInfo(id):
-#     print(id)
-#     con = mysql.connect()
-#     cursor = con.cursor()
-#
-#     cursor.execute("Select w.name, w.limits, w.duration, w.time, t.first_name as trainer_first_name, t.last_name as trainer_last_name"
-#                    "from workout left join trainer as t on t.id=w.trainer_id where w.id="+str(id)+";")
-#
-#
-#
-#     #extract row headers for json
-#     row_headers = [x[0] for x in cursor.description]
-#     rv = cursor.fetchall()
-#     json_data = []
-#     for result in rv:
-#         json_data.append(dict(zip(row_headers, result)))
-#     print(json.dumps(json_data))
-#     return json.dumps(json_data)
+@app.route('/admin/workout/details/<int:id>', methods = ['GET'])
+def workoutInfo(id):
+    print(id)
+    con = mysql.connect()
+    cursor = con.cursor()
+
+    cursor.execute("Select w.name, w.limits, w.duration, w.time, t.first_name as trainer_first_name, t.last_name as trainer_last_name"
+                   "from workout left join trainer as t on t.id=w.trainer_id where w.id="+str(id)+";")
+
+
+
+    #extract row headers for json
+    row_headers = [x[0] for x in cursor.description]
+    rv = cursor.fetchall()
+    json_data = []
+    for result in rv:
+        json_data.append(dict(zip(row_headers, result)))
+    print(json.dumps(json_data))
+    return json.dumps(json_data)
 
 @app.route('/admin/add/workout', methods = ['POST'])
 def addWorkout():
@@ -626,10 +629,12 @@ def signUpUser():
     limits = request.get_json()['limits']
     enrolled_users = request.get_json()['sign_up_users']
 
+    if(int(enrolled_users) == int(limits)):
+        return jsonify({'error'})
 
 
-    if (int(limits)-int(enrolled_users)) <0:
-        return jsonify({'result': 'error'})
+    elif (int(limits)-int(enrolled_users)) <0:
+        return jsonify({'error'})
     else:
 
         sql= "INSERT INTO users_workouts (user_id, wourkout_id) VALUES (%s,%s)"
@@ -692,12 +697,10 @@ def saveToExcel():
         json_data.append(dict(zip(row_headers, result)))
     print(json.dumps(json_data))
     pandas.read_json(json.dumps(json_data)).to_excel(str(date.today())+'.xlsx', index=False)
-
-    return jsonify({'result': json_data})
-
-
-
-
+    file = str(date.today())+'.xlsx'
+    path = "/Desktop/"
+    uploads = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
+    return send_from_directory(directory=uploads, filename=file)
 
 
 
@@ -706,5 +709,11 @@ def saveToExcel():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
+
 
 
